@@ -1,0 +1,7 @@
+
+form {
+    display:inline; margin:0px; padding:0px;
+}
+.d-sm-inline-block {
+    display: inline-block!important;
+}
