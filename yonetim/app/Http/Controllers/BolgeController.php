@@ -17,6 +17,7 @@ class BolgeController extends Controller
     {
 
         $bolge = BolgeModel::where('durum','=',1)
+            ->orderBy('ad','asc')
         ->get();
         return view('bolge.index',compact('bolge'));
     }

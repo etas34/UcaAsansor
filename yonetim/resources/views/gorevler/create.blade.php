@@ -52,7 +52,7 @@
                                         <div class="input-group date">
                                             <div class="input-group-addon">
                                             </div>
-                                            <input type="text" class="form-control pull-right datepicker" name="bas_zaman"
+                                            <input type="text" class="form-control pull-right datepicker" required name="bas_zaman"
                                                    id="datepicker_bas" value="">
                                         </div>
                                         <!-- /.input group -->

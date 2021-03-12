@@ -67,6 +67,7 @@ class AsansorController extends Controller
     public function create()
     {
         $bolge = BolgeModel::where('durum','=',1)
+            ->orderBy('ad','asc')
             ->get();
         $user=User::where('durum','=',1)->get();
         return view('asansor.create',compact('user','bolge'));
@@ -141,6 +142,7 @@ class AsansorController extends Controller
     public function edit($id)
     {
         $bolge = BolgeModel::where('durum','=',1)
+            ->orderBy('ad','asc')
             ->get();
         $user=User::where('durum','=',1)->get();
         $asansor=AsansorModel::find($id);

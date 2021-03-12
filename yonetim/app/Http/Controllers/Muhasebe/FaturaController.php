@@ -248,7 +248,7 @@ class FaturaController extends Controller
      */
     public function faturabakim()
     {
-        $bakimlar = BakimModel::where('cari_id', '!=', '')
+        $bakimlar = BakimModel::where('bakim_models.durum',1)->where('cari_id', '!=', '')
             ->join('asansor_models', 'bakim_models.asansor_id', '=', 'asansor_models.id')
             ->select('bakim_models.*', 'asansor_models.apartman', 'asansor_models.cari_id', 'asansor_models.blok', 'asansor_models.bakim_ucreti')
             ->get();
@@ -264,7 +264,7 @@ class FaturaController extends Controller
      */
     public function faturaparca()
     {
-        $parcalar = ParcaModel::where('cari_id', '!=', '')
+        $parcalar = ParcaModel::where('cari_id', '!=', '')->where('durum',1)
             ->join('asansor_models', 'parca_models.asansor_id', '=', 'asansor_models.id')
             ->select('parca_models.*', 'asansor_models.cari_id', 'asansor_models.apartman', 'asansor_models.blok')
             ->get();
@@ -282,13 +282,13 @@ class FaturaController extends Controller
 
         $cari = Cari::find($id);
 
-        $bakimlar = BakimModel::where('cari_id', '=', $id)
+        $bakimlar = BakimModel::where('bakim_models.durum',1)->where('cari_id', '=', $id)
             ->join('asansor_models', 'bakim_models.asansor_id', '=', 'asansor_models.id')
             ->select('bakim_models.*', 'asansor_models.apartman', 'asansor_models.blok', 'asansor_models.bakim_ucreti')
             ->get();
 
 
-        $parcalar = ParcaModel::where('cari_id', '=', $id)
+        $parcalar = ParcaModel::where('cari_id', '=', $id)->where('durum',1)
             ->join('asansor_models', 'parca_models.asansor_id', '=', 'asansor_models.id')
             ->select('parca_models.*', 'asansor_models.apartman', 'asansor_models.blok')
             ->get();
@@ -333,6 +333,8 @@ class FaturaController extends Controller
      */
     public function store(Request $request)
     {
+
+        dd($request);
 
 
         if ($request->bakim_ids)

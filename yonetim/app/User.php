@@ -81,7 +81,9 @@ class User extends Authenticatable
         return $this->hasMany(AsansorModel::class, 'bakimci_id')
             ->where('durum', 1)
             ->whereNotNull('bu_ay_bakim_tarih')
-            ->whereDate('aylik_bakim', '<', Carbon::now()->firstOfMonth())
+            ->where(function ($query) {
+                $query->whereDate('aylik_bakim', '<', Carbon::now()->firstOfMonth())
+                    ->orWhereNull('aylik_bakim');})
             ->orderBy('bu_ay_bakim_tarih', 'asc');
     }
 }

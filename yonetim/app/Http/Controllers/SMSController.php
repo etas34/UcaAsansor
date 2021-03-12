@@ -6,6 +6,7 @@ use App\AsansorModel;
 use App\smsModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use URL;
 
 class SMSController extends Controller
 {
@@ -45,10 +46,13 @@ class SMSController extends Controller
     public function store(Request $request)
     {
         $phone=$request->phone;
-        $phone=str_replace(str_split('()-'), ' ', $phone);
+        $phone='90'.str_replace(str_split('()-\ '), '', $phone);
         $mesaj=$request->mesaj;
         $path="";
 
+
+
+        $url = URL::to('/storage/app/pdf');
 
         if($request->hasFile('pdf'))
         {
@@ -58,13 +62,14 @@ class SMSController extends Controller
 
             $path=$file->storeAs('pdf',$filename);
 
-            $mesaj.=" https://ciftcilerasansor.com.tr/yonetim/storage/app/pdf/".$filename;
+            $mesaj.=" ".$url."/".$filename;
 
         }
 
 
 
         $sonuc=$this->smsgonder($mesaj,$phone);
+
 
         if($sonuc)
         {
@@ -89,27 +94,28 @@ class SMSController extends Controller
 
     public function toplusms_gonder(Request $request)
     {
+        $phones=array();
         $asansor=AsansorModel::where('durum','=', 1)
            ->select('yonetici_tel')->distinct()->get();
 
         foreach ($asansor as $value)
         {
             $phone=$value->yonetici_tel;
-            $phone=str_replace(str_split('()-'), ' ', $phone);
-            $mesaj=$request->mesaj;
+            $phone='90'.str_replace(str_split('()-\ '), '', $phone);
+            $phones[]=$phone;
+
+        }
 
 
+        $mesaj=$request->mesaj;
+        $sonuc=$this->smsgonder($mesaj,$phones);
 
-            $sonuc=$this->smsgonder($mesaj,$phone);
-
-            if($sonuc)
-            {
-                $sms=new smsModel();
-                $sms->phone=$phone;
-                $sms->mesaj=$mesaj;
-                $sms->save();
-
-            }
+        if($sonuc)
+        {
+            $sms=new smsModel();
+            $sms->phone='Tüm Yöneticilere';
+            $sms->mesaj=$mesaj;
+            $sms->save();
 
         }
 
@@ -128,7 +134,7 @@ class SMSController extends Controller
      */
     public function gecmis()
     {
-        $sms=smsModel::all();
+        $sms=smsModel::orderBy('created_at','desc')->get();
 
 
         return view('sms.gecmis',compact('sms'));
@@ -172,47 +178,39 @@ class SMSController extends Controller
         //
     }
 
-    public function smsgonder($message,$number)
+    public function smsgonder($message,$phones)
     {
 
-
-        $username   = '5465510345';
-        $password   = 'Ciftciler!2019';
-        $orgin_name = 'CIFTCILER';
-        $date=date('d/m/Y H:i');
-
-        $xml = "		 <request>
-   			 <authentication>
-   				 <username>{$username}</username>
-   				 <password>{$password}</password>
-   			 </authentication>
-
-   			 <order>
-   	    		 <sender>{$orgin_name}</sender>
-   	    		 <sendDateTime>{$date}</sendDateTime>
-   	    		 <message>
-   	        		 <text>{$message}</text>
-   	        		 <receipents>
-   	            		 <number>{$number}</number>
-   	        		 </receipents>
-   	    		 </message>
-   			 </order>
-   		 </request>";
-
-
-        $result=self::sendRequest('http://api.iletimerkezi.com/v1/send-sms',$xml,array('Content-Type: text/xml'));
-
-        $xml=new \SimpleXMLElement($result);
-
-        if($xml->status->code=='200')
-        {
-            return true;
-        }
-        else
-        {
+        $sms_msg = array(
+            "username" => "908508081889", // https://oim.verimor.com.tr/sms_settings/edit adresinden öğrenebilirsiniz.
+            "password" => "UcaAsn2021", // https://oim.verimor.com.tr/sms_settings/edit adresinden belirlemeniz gerekir.
+            "source_addr" => 'UCAASANSOR', // Gönderici başlığı, https://oim.verimor.com.tr/headers adresinde onaylanmış olmalı, değilse 400 hatası alırsınız.
+//    "valid_for" => "48:00",
+//    "send_at" => "2015-02-20 16:06:00",
+//    "datacoding" => "0",
+            "custom_id" => "1424441160.9331344",
+            "messages" => array(
+                array(
+                    "msg" => $message,
+                    "dest" => $phones
+                )
+            )
+        );
+        $ch = curl_init('http://sms.verimor.com.tr/v2/send.json');
+        curl_setopt_array($ch, array(
+            CURLOPT_POST => TRUE,
+            CURLOPT_RETURNTRANSFER => TRUE,
+            CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
+            CURLOPT_POSTFIELDS => json_encode($sms_msg),
+        ));
+        $http_response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($http_code != 200) {
+            echo "$http_code $http_response\n";
             return false;
         }
 
+        return $http_response;
     }
 
     static function sendRequest($site_name,$send_xml,$header_type) {

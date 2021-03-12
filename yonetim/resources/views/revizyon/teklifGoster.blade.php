@@ -18,11 +18,11 @@
                                     </div>
 
                                     <div class="col-6 text-right" style="line-height:10px !important;">
-                                        <h4>ÇİFTÇİLER ELK.MAK.İNŞ.TAAH.SAN.TİC.LTD.ŞTİ</h4>
-                                        <p>Organize San.Böl.1.Cadde 9.Sokak No:1 </p>
-                                        <p>AFYONKARAHİSAR</p>
-                                        <p>Tel: 444 1 671 / F.0 272 215 85 23</p>
-                                        <p>info@ciftcilerasansor.com.tr / www.cifcilerasansor.com.tr</p>
+                                        <h4>UCA ASANSÖR</h4>
+                                        <p>Güzeltepe mah. Ardıç Sokak No:41/A Alibeyköy-Eyüp</p>
+                                        <p>İSTANBUL</p>
+                                        <p>Tel: 0850 808 1 889</p>
+                                        <p>info@ucasansor.com</p>
                                     </div>
                                     <!-- /.col -->
                                     <hr>
@@ -80,7 +80,7 @@
                                     <!-- /.col -->
 
                                     <div class="col-6 border py-1" style="border-width:2px !important; border-color: rgba(11,46,19,0.73) !important;">
-                                        <h3 class="text-center font-weight-bold">ÇİFTÇİLER ASANSÖR</h3>
+                                        <h3 class="text-center font-weight-bold">UCA ASANSÖR</h3>
 
 
                                         <div class="form-group-sm row">
@@ -227,7 +227,7 @@
 
                                     <div class="col-6 border py-1" style="border-width:2px !important; border-color: rgba(11,46,19,0.73) !important; overflow:hidden;">
                                         <h3 class="text-center font-weight-bold border">TEKLİF VE ONAY</h3>
-                                        <img src="{{asset('public/images/logo/imza.jpg')}}" style="height: 250px; width: 500px;">
+{{--                                        <img src="{{asset('public/images/logo/imza.jpg')}}" style="height: 250px; width: 500px;">--}}
 
                                     </div>
                                     <!-- /.col -->

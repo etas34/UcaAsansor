@@ -49,9 +49,10 @@ class gunSonuBakim extends Command
             ->whereDate('aylik_bakim', '<', Carbon::now()->firstOfMonth())->get();
 
 
-        $bakim_gunluk=BakimModel::whereDate('created_at', '>=', Carbon::now())->get();
+        $bakim_gunluk=BakimModel::whereDate('created_at', '>=', Carbon::now())->where('durum',1)->get();
 
         $bakim_gunluk_user=BakimModel::whereDate('created_at', '>=', Carbon::now())
+             ->where('durum',1)
             ->select('user_id', DB::raw('count(*) as total'))
             ->groupBy('user_id')
             ->get();

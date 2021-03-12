@@ -26,26 +26,12 @@ class ArizaController extends Controller
 {
     public function deneme()
     {
+        $mesaj='asdasdasd';
+        $phone='905465510345,905394776525';
 
-        $url = URL::to('/ariza/gider/1' );
-//        dd($url);
-        $keyboard = [
-            'inline_keyboard' => [
-                [
-                    ['text' => '✅' . 'Arıza Gider', 'url' =>$url]
-                ]
-            ]
-        ];
-        $encodedKeyboard = json_encode($keyboard);
+        $sonuc=$this->smsgonder($mesaj,$phone);
 
-
-        Telegram::sendMessage([
-            'chat_id' => Config::get('chat_id.ariza'),
-            'parse_mode' => 'HTML',
-            'text' => 'asdsad',
-            'reply_markup' => $encodedKeyboard
-        ]);
-
+        dd($sonuc);
     }
 
     public function index()
@@ -281,43 +267,38 @@ class ArizaController extends Controller
     }
 
 
-    public function smsgonder($message, $number)
+    public function smsgonder($message, $phones)
     {
-
-
-        $username = '5465510345';
-        $password = 'Ciftciler!2019';
-        $orgin_name = 'CIFTCILER';
-        $date = date('d/m/Y H:i');
-
-        $xml = "         <request>
-             <authentication>
-                 <username>{$username}</username>
-                 <password>{$password}</password>
-             </authentication>
-
-             <order>
-                 <sender>{$orgin_name}</sender>
-                 <sendDateTime>{$date}</sendDateTime>
-                 <message>
-                     <text>{$message}</text>
-                     <receipents>
-                         <number>{$number}</number>
-                     </receipents>
-                 </message>
-             </order>
-         </request>";
-
-
-        $result = self::sendRequest('http://api.iletimerkezi.com/v1/send-sms', $xml, array('Content-Type: text/xml'));
-
-        $xml = new \SimpleXMLElement($result);
-
-        if ($xml->status->code == '200') {
-            return true;
-        } else {
+        $sms_msg = array(
+            "username" => "908508081889", // https://oim.verimor.com.tr/sms_settings/edit adresinden öğrenebilirsiniz.
+            "password" => "UcaAsn2021", // https://oim.verimor.com.tr/sms_settings/edit adresinden belirlemeniz gerekir.
+            "source_addr" => 'UCAASANSOR', // Gönderici başlığı, https://oim.verimor.com.tr/headers adresinde onaylanmış olmalı, değilse 400 hatası alırsınız.
+//    "valid_for" => "48:00",
+//    "send_at" => "2015-02-20 16:06:00",
+//    "datacoding" => "0",
+            "custom_id" => "1424441160.9331344",
+            "messages" => array(
+                array(
+                    "msg" => $message,
+                    "dest" => $phones
+                )
+            )
+        );
+        $ch = curl_init('http://sms.verimor.com.tr/v2/send.json');
+        curl_setopt_array($ch, array(
+            CURLOPT_POST => TRUE,
+            CURLOPT_RETURNTRANSFER => TRUE,
+            CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
+            CURLOPT_POSTFIELDS => json_encode($sms_msg),
+        ));
+        $http_response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($http_code != 200) {
+            echo "$http_code $http_response\n";
             return false;
         }
+
+        return $http_response;
 
     }
 
@@ -386,8 +367,9 @@ class ArizaController extends Controller
             // SMS Gönderimi
             if (isset($request->CbMesaj)) {
                 $phone = $request->yonetici_tel;
+                $phone='90'.str_replace(str_split('()-\ '), '', $phone);
 
-                $mesaj = $request->mesaj . " Çiftçiler Asansor";
+                $mesaj = $request->mesaj;
 
                 $sonuc = $this->smsgonder($mesaj, $phone);
 

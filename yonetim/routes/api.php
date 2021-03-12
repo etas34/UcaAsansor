@@ -27,7 +27,7 @@ Route::get('/asansor/{id1}/{id2}', function ($id1, $id2) {
         ->first();
 
     if ($asansor) {
-        $bakim = \App\BakimModel::where('asansor_id', $asansor->id)
+        $bakim = \App\BakimModel::where('durum',1)->where('asansor_id', $asansor->id)
             ->orderBy('created_at', 'DESC')
             ->get();
 
@@ -41,7 +41,7 @@ Route::get('/asansor/{id1}/{id2}', function ($id1, $id2) {
                 $value['bakim_parca'] =  $bakim_parca = \App\ParcaModel::where('bakim_id', $value->id)
                     ->get();
             }
-            $foto = \App\BakimModel::where('asansor_id', $asansor->id)
+            $foto = \App\BakimModel::where('durum',1)->where('asansor_id', $asansor->id)
                     ->orderBy('created_at', 'DESC')
                     ->first()
                     ->images ?? '';

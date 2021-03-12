@@ -75,13 +75,13 @@ class CariController extends Controller
         $faturaTop = Fatura::whereBetween('created_at',[$start,$end])
         ->sum('gentoplam');
 
-        $parcalar = ParcaModel::where('cari_id', '!=', '')
+        $parcalar = ParcaModel::where('cari_id', '!=', '')->where('durum',1)
             ->whereNull('fatura_no')
             ->join('asansor_models', 'parca_models.asansor_id', '=', 'asansor_models.id')
             ->select('parca_models.*', 'asansor_models.cari_id', 'asansor_models.apartman', 'asansor_models.blok')
             ->count();
 
-        $bakimlar = BakimModel::where('cari_id', '!=', '')
+        $bakimlar = BakimModel::where('cari_id', '!=', '')->where('bakim_models.durum',1)
             ->whereNull('fatura_no')
             ->join('asansor_models', 'bakim_models.asansor_id', '=', 'asansor_models.id')
             ->select('bakim_models.*', 'asansor_models.apartman', 'asansor_models.cari_id', 'asansor_models.blok', 'asansor_models.bakim_ucreti')

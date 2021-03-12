@@ -23,7 +23,7 @@
                                         <label for="formGroupExampleInput" class="d-block">Bölge Filtre</label>
                                         <select class="form-control " id="asansor_select"  required>
                                             <option value="1"  selected>Tüm Bölgeler</option>
-                                            @foreach(\App\BolgeModel::all() as $bolge)
+                                            @foreach(\App\BolgeModel::where('durum','=',1)->orderBy('ad','asc')->get() as $bolge)
                                                 <option value="{{$bolge->ad}}">{{$bolge->ad}}</option>
                                             @endforeach
                                         </select>

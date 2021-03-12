@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use Maatwebsite\Excel\Facades\Excel;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use URL;
 
 class BakimController extends Controller
 {
@@ -72,11 +73,11 @@ class BakimController extends Controller
     {
 
         if ($id == 0) {
-            $bakim = BakimModel::all();
+            $bakim = BakimModel::where('durum',1)->get();
         } elseif ($id == 1) {
-            $bakim = BakimModel::whereDate('created_at', '>=', Carbon::now()->firstOfMonth())->get();
+            $bakim = BakimModel::whereDate('created_at', '>=', Carbon::now()->firstOfMonth())->where('durum',1)->get();
         } elseif ($id == 2) {
-            $bakim = BakimModel::whereDate('created_at', '>=', Carbon::now())->get();
+            $bakim = BakimModel::whereDate('created_at', '>=', Carbon::now())->where('durum',1)->get();
         }
 
         return view('bakim.bakimlar', compact('bakim'));
@@ -200,10 +201,11 @@ class BakimController extends Controller
             ]);
 
             // SMS Gönderimi
-            $phone = $asansor['yonetici_tel'];
-            $phone = str_replace(str_split('()-'), ' ', $phone);
 
-            $mesaj = "Merhaba " . $asansor['yonetici'] . ", " . $asansor['apartman'] . " " . $asansor['blok'] . "'nin aylık periyodik bakımı yapılmıştır. Asansörünüzün bakım ve arıza geçmişini görmek için https://ciftcilerasansor.com.tr/asansor.php?q=" . $asansor['kimlik'] . " Çiftçiler Asansor";
+            $phone = $asansor['yonetici_tel'];
+            $phone='90'.str_replace(str_split('()-\ '), '', $phone);
+
+            $mesaj = "Merhaba " . $asansor['yonetici'] . ", " . $asansor['apartman'] . " " . $asansor['blok'] . "'nin aylık periyodik bakımı yapılmıştır. Asansörünüzün bakım ve arıza geçmişini görmek için http://ucaasansor.net/asansor.php?q=" . $asansor['kimlik'] . " Uca Asansor";
 
             $sonuc = $this->smsgonder($mesaj, $phone);
 
@@ -306,7 +308,44 @@ class BakimController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+
+            $bakim = BakimModel::find($id);
+            $bakim->durum = 0;
+            $bakim->save();
+            AsansorModel::find($bakim->asansor_id)->update(['aylik_bakim' => null]);
+            ParcaModel::where('bakim_id',$id)->delete();
+
+            DB::commit();
+
+
+            // telegram
+            $asansor = AsansorModel::find($bakim->asansor_id);
+            $user = User::find($bakim->user_id);
+
+            $text = "<b>‼️ Dikkat Bakım Silindi</b>\n"
+                . "--------------------------------\n"
+                . "<b>Apartman :</b>" . $asansor->apartman . "\n"
+                . "<b>Blok :</b>" . $asansor->blok . "\n"
+                . "<b>Bakımı Silen :</b>" . $user->name . "\n";
+
+
+            Telegram::sendMessage([
+                'chat_id' => Config::get('chat_id.bakim'),
+                'parse_mode' => 'HTML',
+                'text' => $text,
+            ]);
+
+            return back()->with('success', 'Bakım Silindi');
+            // all good
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return back()->with('error', 'Bakım Silinemedi' . $e);
+            // something went wrong
+        }
     }
 
     public function export()
@@ -315,44 +354,39 @@ class BakimController extends Controller
         return Excel::download(new BakimExport(), 'bakim_yapilacaklar.xlsx');
     }
 
-    public function smsgonder($message, $number)
+    public function smsgonder($message, $phones)
     {
 
-
-        $username = '5465510345';
-        $password = 'Ciftciler!2019';
-        $orgin_name = 'CIFTCILER';
-        $date = date('d/m/Y H:i');
-
-        $xml = "		 <request>
-   			 <authentication>
-   				 <username>{$username}</username>
-   				 <password>{$password}</password>
-   			 </authentication>
-
-   			 <order>
-   	    		 <sender>{$orgin_name}</sender>
-   	    		 <sendDateTime>{$date}</sendDateTime>
-   	    		 <message>
-   	        		 <text>{$message}</text>
-   	        		 <receipents>
-   	            		 <number>{$number}</number>
-   	        		 </receipents>
-   	    		 </message>
-   			 </order>
-   		 </request>";
-
-
-        $result = self::sendRequest('http://api.iletimerkezi.com/v1/send-sms', $xml, array('Content-Type: text/xml'));
-
-        $xml = new \SimpleXMLElement($result);
-
-        if ($xml->status->code == '200') {
-            return true;
-        } else {
+        $sms_msg = array(
+            "username" => "908508081889", // https://oim.verimor.com.tr/sms_settings/edit adresinden öğrenebilirsiniz.
+            "password" => "UcaAsn2021", // https://oim.verimor.com.tr/sms_settings/edit adresinden belirlemeniz gerekir.
+            "source_addr" => 'UCAASANSOR', // Gönderici başlığı, https://oim.verimor.com.tr/headers adresinde onaylanmış olmalı, değilse 400 hatası alırsınız.
+//    "valid_for" => "48:00",
+//    "send_at" => "2015-02-20 16:06:00",
+//    "datacoding" => "0",
+            "custom_id" => "1424441160.9331344",
+            "messages" => array(
+                array(
+                    "msg" => $message,
+                    "dest" => $phones
+                )
+            )
+        );
+        $ch = curl_init('http://sms.verimor.com.tr/v2/send.json');
+        curl_setopt_array($ch, array(
+            CURLOPT_POST => TRUE,
+            CURLOPT_RETURNTRANSFER => TRUE,
+            CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
+            CURLOPT_POSTFIELDS => json_encode($sms_msg),
+        ));
+        $http_response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($http_code != 200) {
+            echo "$http_code $http_response\n";
             return false;
         }
 
+        return $http_response;
     }
 
     static function sendRequest($site_name, $send_xml, $header_type)

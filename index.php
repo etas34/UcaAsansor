@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <title>Uca Lift & Asansör</title>
+    <title>Uca Asansör</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -26,18 +26,20 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
-        <a class="navbar-brand" href="index.html"><span>Uca Lift & Asansör</a>
+        <a class="navbar-brand" href="index.php">
+            <img src="images/logo.png" alt="">
+        </a>
     </div>
 </nav>
 
-<section class="hero-wrap js-fullheight" style="background-image: url('images/bg_1.jpg');" data-section="home">
+<section class="hero-wrap js-fullheight" style="background-image: url('images/bg2.jpeg');" data-section="home">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-start"
              data-scrollax-parent="true">
             <div class="col-md-8 ftco-animate mt-5" data-scrollax=" properties: { translateY: '70%' }">
                 <p class="d-flex align-items-center" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
-                <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Uca Lift, Asansör, Bakım ve Onarım Hizmetleri</h1>
+                <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Uca Asansör Bakım ve Onarım Hizmetleri</h1>
                 <p class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Sizlere Daha İyi Hizmet Vermek İçin, Asansör Konusunda Hayatınızın Her Anındayız.</p>
             </div>
         </div>
@@ -108,7 +110,7 @@
                     <h2 class="ftco-heading-2">İLETİŞİM</h2>
                     <div class="block-23 mb-3">
                         <ul>
-                            <li><span class="icon icon-map-marker"></span><span class="text">Güzeltepe mah. Bayramoğlu Sit. A4 Blok K.8 D.64 Eyüp/İST</span>
+                            <li><span class="icon icon-map-marker"></span><span class="text">Güzeltepe mah. Ardıç Sokak No:41/A Alibeyköy-Eyüp/İSTANBUL</span>
                             </li>
                             <li><a href="#"><span class="icon icon-phone"></span><span
                                     class="text">0850 808 1 889</span></a></li>

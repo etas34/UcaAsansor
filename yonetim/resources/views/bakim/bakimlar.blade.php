@@ -42,6 +42,7 @@
                                                     <th>Fatura</th>
                                                     <th style="width: 15px;">Düzenle</th>
                                                     <th style="width: 15px;">Detaylar</th>
+                                                    <th style="width: 15px;">Sil</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -57,6 +58,12 @@
                                                         <td>{{$value->fatura_no}}</td>
                                                         <td><a href="{{route('bakim.edit',$value->id)}}"><span class="badge bg-warning p-2">Düzenle</span></a></td>
                                                         <td><a href="{{route('bakim.detay',$value->id)}}"><span class="badge bg-primary p-2">Detaylar</span></a></td>
+                                                        <td><form  method="post" onSubmit="return confirm('Emin misiniz?')"
+                                                                   action="{{route('bakim.delete',$value->id)}}">
+                                                                {{csrf_field()}}
+                                                                {{method_field('delete')}}
+                                                                <button class="badge bg-danger p-2">Sil</button>
+                                                            </form></td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>

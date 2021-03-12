@@ -18,11 +18,11 @@
                                     </div>
 
                                     <div class="col-6 text-right" style="line-height:10px !important;">
-                                        <h4>ÇİFTÇİLER ELK.MAK.İNŞ.TAAH.SAN.TİC.LTD.ŞTİ</h4>
-                                        <p>Organize San.Böl.1.Cadde 9.Sokak No:1 </p>
-                                        <p>AFYONKARAHİSAR</p>
-                                        <p>Tel: 444 1 671 / F.0 272 215 85 23</p>
-                                        <p>info@ciftcilerasansor.com.tr / www.cifcilerasansor.com.tr</p>
+                                        <h4>UCA ASANSÖR</h4>
+                                        <p>Güzeltepe mah. Ardıç Sokak No:41/A Alibeyköy-Eyüp</p>
+                                        <p>İSTANBUL</p>
+                                        <p>Tel: 0850 808 1 889</p>
+                                        <p>info@ucasansor.com</p>
                                     </div>
                                     <!-- /.col -->
                                     <hr>
@@ -80,13 +80,13 @@
                                     <!-- /.col -->
 
                                     <div class="col-6 border py-1" style="border-width:2px !important; border-color: rgba(11,46,19,0.73) !important;">
-                                        <h3 class="text-center font-weight-bold">ÇİFTÇİLER ASANSÖR</h3>
+                                        <h3 class="text-center font-weight-bold">UCA ASANSÖR</h3>
 
 
                                         <div class="form-group-sm row">
                                             <label for="input4" class="col-sm-3 col-form-label">ADI SOYADI</label>
                                             <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="input4" name="burak" value="Burak Geçe">
+                                                <input type="text" class="form-control" id="input4" name="burak" value="">
                                             </div>
                                         </div>
 
@@ -94,7 +94,7 @@
                                             <label for="input5" class="col-sm-3 col-form-label">GÖREV</label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control" id="input5" name="burak_gorev"
-                                                       value="Genel Koordinatör">
+                                                       value="">
                                             </div>
                                         </div>
 
@@ -102,7 +102,7 @@
                                             <label for="input6" class="col-sm-3 col-form-label">TELEFON</label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control" name="burak_tel" id="input6"
-                                                       value="(546) 260-2989">
+                                                       value="">
                                             </div>
                                         </div>
 
@@ -111,7 +111,7 @@
                                             <label for="input7" class="col-sm-3 col-form-label">E-POSTA</label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control" id="input7" name="burak_mail"
-                                                       value="info@ciftcilerasansor.com.tr">
+                                                       value="">
                                             </div>
                                         </div>
 
@@ -135,7 +135,7 @@
                                             </thead>
                                             <tbody>
                                             <tr>
-                                                <td style="padding: 0px !important;"><input type="text" name="urun[0][aciklama]" class="form-control" value="KENT MUAYENE RAPORUNA İSTİNADEN MAVİ ETİKET ALIM İŞİ"></td>
+                                                <td style="padding: 0px !important;"><input type="text" name="urun[0][aciklama]" class="form-control"></td>
                                                 <td style="padding: 0px !important;"><input type="number" id="miktar0" name="urun[0][miktar]" min="0"
                                                            class="form-control hesapla sayisay"></td>
                                                 <td style="padding: 0px !important;"><input type="number" id="fiyat0" min="0" step="0.0001"  name="urun[0][fiyat]"
@@ -233,7 +233,7 @@
 
                                     <div class="col-6 border py-1" style="border-width:2px !important; border-color: rgba(11,46,19,0.73) !important; overflow:hidden;">
                                         <h3 class="text-center font-weight-bold border">TEKLİF VE ONAY</h3>
-                                        <img src="{{asset('public/images/logo/imza.jpg')}}" style="height: 250px; width: 500px;">
+{{--                                        <img src="{{asset('public/images/logo/imza.jpg')}}" style="height: 250px; width: 500px;">--}}
 
                                     </div>
                                     <!-- /.col -->

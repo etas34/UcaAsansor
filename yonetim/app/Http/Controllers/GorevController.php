@@ -153,7 +153,7 @@ class GorevController extends Controller
                 $atanan=$diger_user;
                 $baslik=GorevModel::find($id)->baslik;
                 $phone=App\User::find($diger_userid)->phone;
-                $phone=str_replace(str_split('()-'), ' ', $phone);
+                $phone='90'.str_replace(str_split('()-\ '), '', $phone);
                 $mesaj="Merhaba ".$atanan.",  ".$baslik." başlıklı görev için yorum yapılmıştır. Detaylar için: https://www.ciftcilerelektrik.com.tr/istakip";
 
                 $this->smsgonder($mesaj,$phone);
@@ -173,7 +173,7 @@ class GorevController extends Controller
 
                 Mail::send('mail/yorum_create', $data, function ($message) use ($data) {
                     $message->subject('Görev İçin Yorum Var!');
-                    $message->from('afyonyazilimevi@gmail.com', 'İş Takip Programı');
+                    $message->from('info@cmsyazilim.net', 'İş Takip Programı');
                     $message->to($data['diger_mail'], $data['diger_user']);
                 });
 
@@ -226,7 +226,7 @@ class GorevController extends Controller
                 $atanan=App\User::find($request->atanan_id)->name;
                 $atayan=App\User::find(Auth::user()->id)->name;
                 $phone=App\User::find($request->atanan_id)->phone;
-                $phone=str_replace(str_split('()-'), ' ', $phone);
+                $phone='90'.str_replace(str_split('()-\ '), '', $phone);
                 $mesaj="Merhaba ".$atanan.",  ".$atayan." size yeni bir görev atamıştır. Detaylar için: https://www.ciftcilerelektrik.com.tr/istakip";
 
                 $this->smsgonder($mesaj,$phone);
@@ -249,7 +249,7 @@ class GorevController extends Controller
 
                 Mail::send('mail/gorev_create', $data, function ($message) use ($data) {
                     $message->subject ('Yeni Görev Açıldı!');
-                    $message->from ('afyonyazilimevi@gmail.com', 'İş Takip Programı');
+                    $message->from ('info@cmsyazilim.net', 'İş Takip Programı');
                     $message->to($data['atanan_mail'], $data['atanan_user']);
                 });
             }
@@ -399,7 +399,7 @@ class GorevController extends Controller
 
             Mail::send('mail/durum_yorum', $data, function ($message) use ($data) {
                 $message->subject ('Görev İçin Yorum Var!');
-                $message->from ('afyonyazilimevi@gmail.com', 'İş Takip Programı');
+                $message->from ('info@cmsyazilim.net', 'İş Takip Programı');
                 $message->to($data['diger_mail'], $data['diger_user']);
             });
 
@@ -546,54 +546,40 @@ class GorevController extends Controller
 
     }
 
-    public function smsgonder($message,$number)
+    public function smsgonder($message,$phones)
     {
 
+        $sms_msg = array(
+            "username" => "908508081889", // https://oim.verimor.com.tr/sms_settings/edit adresinden öğrenebilirsiniz.
+            "password" => "UcaAsn2021", // https://oim.verimor.com.tr/sms_settings/edit adresinden belirlemeniz gerekir.
+            "source_addr" => 'UCAASANSOR', // Gönderici başlığı, https://oim.verimor.com.tr/headers adresinde onaylanmış olmalı, değilse 400 hatası alırsınız.
+//    "valid_for" => "48:00",
+//    "send_at" => "2015-02-20 16:06:00",
+//    "datacoding" => "0",
+            "custom_id" => "1424441160.9331344",
+            "messages" => array(
+                array(
+                    "msg" => $message,
+                    "dest" => $phones
+                )
+            )
+        );
+        $ch = curl_init('http://sms.verimor.com.tr/v2/send.json');
+        curl_setopt_array($ch, array(
+            CURLOPT_POST => TRUE,
+            CURLOPT_RETURNTRANSFER => TRUE,
+            CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
+            CURLOPT_POSTFIELDS => json_encode($sms_msg),
+        ));
+        $http_response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($http_code != 200) {
+            echo "$http_code $http_response\n";
+            return false;
+        }
 
-        $username   = '5465510345';
-        $password   = 'Ciftciler!2019';
-        $orgin_name = 'CIFTCILER';
-        $date=date('d/m/Y H:i');
-
-        $xml = "		 <request>
-   			 <authentication>
-   				 <username>{$username}</username>
-   				 <password>{$password}</password>
-   			 </authentication>
-
-   			 <order>
-   	    		 <sender>{$orgin_name}</sender>
-   	    		 <sendDateTime>{$date}</sendDateTime>
-   	    		 <message>
-   	        		 <text>{$message}</text>
-   	        		 <receipents>
-   	            		 <number>{$number}</number>
-   	        		 </receipents>
-   	    		 </message>
-   			 </order>
-   		 </request>";
-
-
-         self::sendRequest('http://api.iletimerkezi.com/v1/send-sms',$xml,array('Content-Type: text/xml'));
-
+        return $http_response;
     }
 
-    static function sendRequest($site_name,$send_xml,$header_type) {
-
-        //die('SITENAME:'.$site_name.'SEND XML:'.$send_xml.'HEADER TYPE '.var_export($header_type,true));
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,$site_name);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,$send_xml);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER,$header_type);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 120);
-
-        $result = curl_exec($ch);
-
-        return $result;
-    }
 
 }

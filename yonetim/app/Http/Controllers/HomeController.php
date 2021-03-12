@@ -55,9 +55,9 @@ class HomeController extends Controller
                 })->get();
 
 
-            $bakim_aylik=BakimModel::whereDate('created_at', '>=', Carbon::now()->firstOfMonth())->get();
+            $bakim_aylik=BakimModel::where('durum',1)->whereDate('created_at', '>=', Carbon::now()->firstOfMonth())->get();
 
-            $bakim_gunluk=BakimModel::whereDate('created_at', '>=', Carbon::now())->get();
+            $bakim_gunluk=BakimModel::where('durum',1)->whereDate('created_at', '>=', Carbon::now())->get();
 
 
             $revizyon=RevizyonModel::whereIn('revizyon_models.durum',[1,3])
