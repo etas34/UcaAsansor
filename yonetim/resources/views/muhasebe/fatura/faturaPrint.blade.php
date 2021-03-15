@@ -179,13 +179,13 @@
 
             <div id="toplam">
                 <div>
-                    {{$value->toplam}} ₺
+                    {{$fatura->toplam}} ₺
                 </div>
                 <div>
-                    {{$value->toplam * 0.18}} ₺
+                    {{$fatura->kdv}} ₺
                 </div>
                 <div>
-                    {{$value->toplam + ($value->toplam * 0.18)}} ₺
+                    {{$fatura->gentoplam}} ₺
                 </div>
 
 

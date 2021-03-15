@@ -31,7 +31,6 @@ class BakimController extends Controller
         if ($id == 0) {
 
             $asansor = AsansorModel::where('durum', '=', 1)
-                ->where('etiket', '!=', 'Kırmızı')
                 ->where(function ($query) {
                     $query->orwhereDate('aylik_bakim', '<=', Carbon::now()->addMonthNoOverflow(-1)->addWeeks(1));
 //                    $query->orwhere('aylik_bakim', null);
@@ -40,7 +39,6 @@ class BakimController extends Controller
         } elseif ($id == 1) {
 
             $asansor = AsansorModel::where('durum', '=', 1)
-                ->where('etiket', '!=', 'Kırmızı')
                 ->where(function ($query) {
                     $query->orwhereDate('aylik_bakim', '<', Carbon::now()->firstOfMonth());
                     $query->orwhere('aylik_bakim', null);
@@ -63,7 +61,6 @@ class BakimController extends Controller
     {
         $user = User::where('durum', '=', 1)->get();
         $asansor = AsansorModel::where('durum', '=', 1)
-            ->where('etiket', '!=', 'Kırmızı')
             ->get();
 
         return view('bakim.index', compact('asansor', 'user'));
@@ -99,8 +96,6 @@ class BakimController extends Controller
     {
         $parcalar = "";
 
-//        dd($request->file('images'));
-//        echo url('/');
 
         $validatedData = $request->validate([
             'images.*' => 'mimes:jpeg,jpg,png',
@@ -119,6 +114,7 @@ class BakimController extends Controller
 //        $bakim->kuyu = $request->kuyu;
 //        $bakim->ekstra = $request->ekstra;
         $bakim->user_id = \Auth::user()->id;
+        $bakim->save();
 
 
         $images = array();
@@ -178,8 +174,24 @@ class BakimController extends Controller
         }
 
 
+            // SMS Gönderimi
+            $yöneticiMesaj = "mesaj gönderilmedi";
+            if (isset($request->CbMesaj)) {
+                $phone = $request->yonetici_tel;
+                $phone='90'.str_replace(str_split('()-\ '), '', $phone);
 
+                $mesaj = $request->mesaj;
 
+                $sonuc = $this->smsgonder($mesaj, $phone);
+                if ($sonuc) {
+                    $yöneticiMesaj = $this->clean_tel($asansor->yonetici_tel) . "=> $mesaj";
+                    $sms = new smsModel();
+                    $sms->phone = $phone;
+                    $sms->mesaj = $mesaj;
+                    $sms->save();
+
+                }
+            }
 
 
             // telegram
@@ -191,8 +203,15 @@ class BakimController extends Controller
                 . "<b>Apartman :</b>" . $asansor->apartman . "\n"
                 . "<b>Blok :</b>" . $asansor->blok . "\n";
 
-            if ($parcalar) $text .= $parcalar;
-            $text .= "<b>Bakım Yapan :</b>" . $user->name . "\n";
+            if ($parcalar) {
+                $text .= "\n<b>🤖 Değişen Parçalar</b>\n";
+                $text .= "--------------------------------\n";
+                $text .= $parcalar . "\n";
+            }
+
+            $text .= "\n<b>📩 SMS Bilgilendirme</b>\n";
+            $text .= "--------------------------------\n";
+            $text .= $yöneticiMesaj;
 
             Telegram::sendMessage([
                 'chat_id' => Config::get('chat_id.bakim'),
@@ -200,23 +219,6 @@ class BakimController extends Controller
                 'text' => $text,
             ]);
 
-            // SMS Gönderimi
-
-            $phone = $asansor['yonetici_tel'];
-            $phone='90'.str_replace(str_split('()-\ '), '', $phone);
-
-            $mesaj = "Merhaba " . $asansor['yonetici'] . ", " . $asansor['apartman'] . " " . $asansor['blok'] . "'nin aylık periyodik bakımı yapılmıştır. Asansörünüzün bakım ve arıza geçmişini görmek için http://ucaasansor.net/asansor.php?q=" . $asansor['kimlik'] . " Uca Asansor";
-
-            $sonuc = $this->smsgonder($mesaj, $phone);
-
-
-            if ($sonuc) {
-                $sms = new smsModel();
-                $sms->phone = $phone;
-                $sms->mesaj = $mesaj;
-                $sms->save();
-
-            }
 
             DB::commit();
             return redirect(route('bakim.index', 1))->with('success', 'Bakım Eklendi');
@@ -434,4 +436,14 @@ class BakimController extends Controller
         } else
             return back()->with('error', 'En az bir tane asansör seçiniz');
     }
+
+
+    function clean_tel($string)
+    {
+        $string = str_replace(' ', '', $string); // Replaces all spaces with hyphens.
+        $string = "0" . $string;
+        return preg_replace('/[^0-9]/', '', $string); // Removes special chars.
+    }
+
+
 }

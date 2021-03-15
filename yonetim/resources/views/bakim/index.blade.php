@@ -76,10 +76,8 @@
                                                             <td>{{\App\User::find($value->bakimci_id)['name'] ?? ''}}</td>
                                                             {{--                                                            <td @if(Carbon\Carbon::parse($value->aylik_bakim)->addMonthsNoOverflow(1)->diffInDays(Carbon\Carbon::now()->startOfDay(),false)>=0 ) class="text-danger" @endif>{{Carbon\Carbon::parse($value->aylik_bakim)->addMonthsNoOverflow(1)->diffInDays(Carbon\Carbon::now()->startOfDay(),false) }}</td>--}}
                                                             <td>
-                                                                <a href=" @if($value->etiket=="Kırmızı") # @else {{route('bakim.create',$value->id)}} @endif"><span
-                                                                        class="badge @if($value->etiket=="Kırmızı") bg-danger @else bg-primary @endif p-2">@if($value->etiket=="Kırmızı")
-                                                                            Bakım Yapılamaz @else Bakım
-                                                                            Yap @endif</span></a></td>
+                                                                <a href="{{route('bakim.create',$value->id)}}"><span
+                                                                        class="badge bg-primary p-2"> Bakım Yap </span></a></td>
                                                         </tr>
                                                     @endforeach
                                                     </tbody>

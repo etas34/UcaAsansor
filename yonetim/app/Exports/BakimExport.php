@@ -20,7 +20,6 @@ class BakimExport implements FromCollection,WithHeadings,ShouldAutoSize,WithEven
     public function collection()
     {
         $bakimlar=AsansorModel::where('durum','=',1)
-            ->where('etiket','!=','Kırmızı')
             ->whereDate('aylik_bakim', '<', Carbon::now()->firstOfMonth())
             ->select('kimlik','apartman','blok','adres','aylik_bakim')->get();
         return $bakimlar;

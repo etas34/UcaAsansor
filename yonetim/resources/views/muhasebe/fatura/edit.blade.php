@@ -163,12 +163,16 @@
                                                 <table class="table">
                                                     <tbody>
                                                     <tr>
-                                                        <th style="width:100px">Toplam</th>
+                                                        <th style="width:150px">Toplam</th>
                                                         <td><input type="number" id="toplam" class="form-control" readonly name="alttoplam"
                                                                    value="{{$fatura->toplam}}"></td>
                                                     </tr>
                                                     <tr>
-                                                        <th>KDV (%18)</th>
+                                                        <th> <label for="kdvsec">KDV &nbsp</label>
+                                                            <select class="form-control-sm"  id="kdvsec" name="kdvsec">
+                                                                <option value="0" @if($fatura->kdvsec=='0') selected @endif>0</option>
+                                                                <option value="0.18" @if($fatura->kdvsec=='0.18') selected @endif>18</option>
+                                                            </select></th>
                                                         <td><input type="number" step="0.01" id="kdv" class="form-control" name="altkdv"
                                                                    readonly value="{{$fatura->kdv}}"></td>
                                                     </tr>
@@ -220,8 +224,11 @@
         $('#myTable').on('click', 'input[type="button"]', function () {
             $(this).closest('tr').remove();
             hesapla()
-        })
+        });
 
+        $('#kdvsec').on('change', function (e) {
+            hesapla()
+        });
         function hesapla() {
             for (k = 0; k < $(".sayisay").length; k++) {
 
@@ -230,13 +237,15 @@
                 var toplam = miktar * fiyat;
                 $("#toplam" + k).val(toplam);
             }
+
+            var kdvsec=$('#kdvsec').val();
             var sum = 0;
             $('.toplamlar').each(function () {
                 sum += parseFloat(this.value);
             });
             $("#toplam").val(sum);
             var top = parseFloat($("#toplam").val());
-            var kdv = top * 0.18;
+            var kdv = top * kdvsec;
             kdv = kdv.toFixed(2).replace(/[.,]00$/, "");
             $("#kdv").val(kdv);
 
@@ -255,13 +264,14 @@
                 var toplam = miktar * fiyat;
                 $("#toplam" + k).val(toplam);
             }
+            var kdvsec=$('#kdvsec').val();
             var sum = 0;
             $('.toplamlar').each(function () {
                 sum += parseFloat(this.value);
             });
             $("#toplam").val(sum);
             var top = parseFloat($("#toplam").val());
-            var kdv = top * 0.18;
+            var kdv = top * kdvsec;
             kdv = kdv.toFixed(2).replace(/[.,]00$/, "");
             $("#kdv").val(kdv);
 

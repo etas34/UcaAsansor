@@ -48,7 +48,6 @@ class HomeController extends Controller
 
 
             $bakim_olmayan_aylik=AsansorModel::where('durum','=',1)
-                ->where('etiket','!=','Kırmızı')
                 ->where(function($query){
                     $query->orwhereDate('aylik_bakim', '<', Carbon::now()->firstOfMonth());
                     $query->orwhere('aylik_bakim', null);

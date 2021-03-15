@@ -7,11 +7,11 @@
             <div class="container-fluid">
                 <div class="row">
 
+                    <form action="{{route('ariza.updateGider',$ariza->id)}}" method="post" autocomplete="off">
+                        {{csrf_field()}}
                     <div class="col-md-12">
                         <div class="card card-primary">
 
-                            <form action="{{route('ariza.updateGider',$ariza->id)}}" method="post" autocomplete="off">
-                                {{csrf_field()}}
                                 <div class="card-header">
                                     <h3 class="card-title"><strong>Asansör Kimlik
                                             No:</strong> {{App\AsansorModel::find($ariza['asansor_id'])->kimlik}}</h3>
@@ -157,10 +157,7 @@
 
 
             </div>
-
-    </div>
-    </div>
-    </section>
+        </section>
 
     </div>
 

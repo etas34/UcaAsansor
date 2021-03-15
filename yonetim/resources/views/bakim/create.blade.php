@@ -93,7 +93,38 @@
                                                    accept="image/*">
                                         </div>
 
-                                        <div class="preview-area row"></div>
+
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" id="myCheck"
+                                               onclick="myFunction()" checked=true name="CbMesaj">
+                                        <label for="myCheck" class="custom-control-label">Yöneticiye Mesaj
+                                            Gönder</label>
+                                    </div>
+                                    <div class="form-group" id="text">
+                                        <label>Yönetici Telefon</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i
+                                                                class="fas fa-phone"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="(532)777-8899"
+                                                   name="yonetici_tel"
+                                                   data-inputmask="&quot;mask&quot;: &quot;(999) 999-9999&quot;"
+                                                   data-mask="" im-insert="true"
+                                                   value="{{$asansor->yonetici_tel}}">
+
+
+                                        </div>
+
+                                        <label class="control-label">Mesaj</label>
+                                        <textarea rows="4" name="mesaj" placeholder="Mesaj Giriniz" class="form-control"
+                                                  id="txtMessage">Sayın {{$asansor->yonetici}}, {{$asansor->apartman}}  {{$asansor->blok}} 'nin aylık periyodik bakımı yapılmıştır. Asansörünüzün bakım ve arıza geçmişini görmek için http://ucaasansor.net/asansor.php?q={{$asansor['kimlik']}}   Uca Asansör </textarea>
+                                    </div>
+
+
+
+
+                                    <div class="preview-area row"></div>
 
 
 
@@ -139,6 +170,35 @@
 
     <script>
 
+        var text = document.getElementById("text");
+
+        $('#checkboxDanger1').change(function(){
+            if($(this).is(':checked')) {
+                // Checkbox is checked..
+                $( "#myCheck" ).prop( "checked", false );
+                text.style.display = "none";
+            } else {
+                // Checkbox is not checked..
+                $( "#myCheck" ).prop( "checked", true );
+                text.style.display = "block";
+            }
+        });
+
+        function myFunction() {
+            var checkBox = document.getElementById("myCheck");
+
+            var text = document.getElementById("text");
+
+            if (checkBox.checked == true ) {
+                text.style.display = "block";
+            } else {
+                text.style.display = "none";
+            }
+        }
+        function enableDisable(bEnable, textBoxID)
+        {
+            document.getElementById(textBoxID).disabled = !bEnable
+        }
 
         var i = $(".items").length;
         $("#yeniEkle").click(function () {

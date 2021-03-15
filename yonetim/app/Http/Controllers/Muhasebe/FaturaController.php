@@ -264,7 +264,7 @@ class FaturaController extends Controller
      */
     public function faturaparca()
     {
-        $parcalar = ParcaModel::where('cari_id', '!=', '')->where('durum',1)
+        $parcalar = ParcaModel::where('cari_id', '!=', '')->where('parca_models.durum',1)
             ->join('asansor_models', 'parca_models.asansor_id', '=', 'asansor_models.id')
             ->select('parca_models.*', 'asansor_models.cari_id', 'asansor_models.apartman', 'asansor_models.blok')
             ->get();
@@ -288,7 +288,7 @@ class FaturaController extends Controller
             ->get();
 
 
-        $parcalar = ParcaModel::where('cari_id', '=', $id)->where('durum',1)
+        $parcalar = ParcaModel::where('cari_id', '=', $id)->where('parca_models.durum',1)
             ->join('asansor_models', 'parca_models.asansor_id', '=', 'asansor_models.id')
             ->select('parca_models.*', 'asansor_models.apartman', 'asansor_models.blok')
             ->get();
@@ -334,8 +334,6 @@ class FaturaController extends Controller
     public function store(Request $request)
     {
 
-        dd($request);
-
 
         if ($request->bakim_ids)
             foreach ($request->bakim_ids as $key => $value) {
@@ -359,6 +357,7 @@ class FaturaController extends Controller
         $fatura->urun = json_encode($request->urun);
 
         $fatura->toplam = $request->alttoplam;
+        $fatura->kdvsec = $request->kdvsec;
         $fatura->kdv = $request->altkdv;
         $fatura->gentoplam = $request->altgentoplam;
         $fatura->aciklama = $request->aciklama;
@@ -511,6 +510,7 @@ class FaturaController extends Controller
         $fatura->urun = json_encode($request->urun);
 
         $fatura->toplam = $request->alttoplam;
+        $fatura->kdvsec = $request->kdvsec;
         $fatura->kdv = $request->altkdv;
         $fatura->gentoplam = $request->altgentoplam;
         $fatura->aciklama = $request->aciklama;

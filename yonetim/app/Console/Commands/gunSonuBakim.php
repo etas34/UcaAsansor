@@ -45,7 +45,6 @@ class gunSonuBakim extends Command
     public function handle()
     {
         $bakim_olmayan_aylik=AsansorModel::where('durum','=',1)
-            ->where('etiket','!=','Kırmızı')
             ->whereDate('aylik_bakim', '<', Carbon::now()->firstOfMonth())->get();
 
 
@@ -59,7 +58,6 @@ class gunSonuBakim extends Command
 
 
         $atanmıs_bakim_olmayanlar=AsansorModel::where('durum','=',1)
-            ->where('etiket','!=','Kırmızı')
             ->whereDate('aylik_bakim', '<', Carbon::now()->firstOfMonth())
             ->whereDate('bu_ay_bakim_tarih', '<=', Carbon::now())
             ->orderBy('bakimci_id')

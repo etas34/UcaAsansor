@@ -327,13 +327,18 @@
                                                 <table class="table">
                                                     <tbody>
                                                     <tr>
-                                                        <th style="width:100px">Toplam</th>
+                                                        <th style="width:150px">Toplam</th>
                                                         <td><input type="number" id="toplam" class="form-control"
                                                                    readonly name="alttoplam"
                                                                    value=""></td>
                                                     </tr>
                                                     <tr>
-                                                        <th>KDV (%18)</th>
+                                                        <th>
+                                                            <label for="kdvsec">KDV &nbsp</label>
+                                                            <select class="form-control-sm"  id="kdvsec" name="kdvsec">
+                                                                <option value="0">0</option>
+                                                                <option value="0.18">18</option>
+                                                            </select></th>
                                                         <td><input type="number" step="0.01" id="kdv"
                                                                    class="form-control" name="altkdv"
                                                                    readonly value=""></td>
@@ -419,6 +424,9 @@
 
 
         });
+        $('#kdvsec').on('change', function (e) {
+            hesapla()
+        });
         function hesapla() {
             for (k = 0; k < $(".sayisay").length; k++) {
 
@@ -427,13 +435,15 @@
                 var toplam = miktar * fiyat;
                 $("#toplam" + k).val(toplam);
             }
+            var kdvsec=$('#kdvsec').val();
             var sum = 0;
             $('.toplamlar').each(function () {
                 sum += parseFloat(this.value);
             });
             $("#toplam").val(sum);
             var top = parseFloat($("#toplam").val());
-            var kdv = top * 0.18;
+
+            var kdv = top * kdvsec;
             kdv = kdv.toFixed(2).replace(/[.,]00$/, "");
             $("#kdv").val(kdv);
 
@@ -513,7 +523,8 @@
 
         $('#myTable').on('click', 'input[type="button"]', function () {
             $(this).closest('tr').remove();
-        })
+            hesapla();
+        });
 
 
         $(document).on('input', '.hesapla', function () {
