@@ -20,8 +20,8 @@
                                     <div class="row">
 
                                         <div class="form-group col-md-12">
-                                            <label class="control-label">İlgili Kişi </label>
-                                            <input type="text" disabled value="{{$cari->ilgili_kisi }}" class="form-control">
+                                            <label class="control-label">Cari Adı </label>
+                                            <input type="text" disabled value="{{$cari->cari_unvan }}" class="form-control">
                                         </div>
 
                                         <div class="form-group col-md-12">

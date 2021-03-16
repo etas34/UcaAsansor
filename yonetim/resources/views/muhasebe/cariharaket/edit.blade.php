@@ -25,19 +25,15 @@
                                             <label>Tür</label>
 
                                             <select disabled name="tur" class="form-control" required="">
-                                                <option value="1"  @if($cariharaket->tur == 1){{'selected=""'}} @endif>
+                                                <option value="1"  @if($cariharaket->tur == 1) selected @endif>
                                                     Tahsilat
                                                 </option>
-                                                <option value="2" @if($cariharaket->tur == 2){{'selected=""'}} @endif>
+                                                <option value="2" @if($cariharaket->tur == 2) selected @endif>
                                                     Ödeme
                                                 </option>
 
                                             </select>
                                         </div>
-
-
-
-
 
 
                                         <div class="form-group col-md-6">
@@ -47,7 +43,38 @@
 
 
 
+                                        <div class="form-group col-md-12">
+                                            <label>Ödeme Metotu</label>
+                                            <select name="odeme_metot" class="form-control" required="">
+                                                <option value="kredi_kart" @if($cariharaket->metot=='kredi_kart') selected @endif>
+                                                    Kredi Kartı
+                                                </option>
+                                                <option value="nakit"  @if($cariharaket->metot=='nakit') selected @endif>
+                                                    Nakit
+                                                </option>
+                                                <option value="eft" @if($cariharaket->metot=='eft') selected @endif>
+                                                    EFT
+                                                </option>
+                                                <option value="multi" @if($cariharaket->metot=='multi') selected @endif>
+                                                    Çoklu Ödeme (Kredi Kartı + Nakit)
+                                                </option>
 
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label>Ödeme Tarihi</label>
+                                            <div class="input-group date">
+                                                <div class="input-group-addon">
+                                                </div>
+                                                <input type="text" value="{{$cariharaket->islem_tarih}}" class="form-control pull-right datepicker" name="tarih" >
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label class="control-label">Açıklama</label>
+                                            <input name="aciklama" value="{{$cariharaket->aciklama}}" class="form-control">
+                                        </div>
 
 
 

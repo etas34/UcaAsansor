@@ -267,6 +267,9 @@ class CariharaketController extends Controller
         }
         $saved = $cari->save();
         $cariharaket->tutar = $request->tutar;
+        $cariharaket->islem_tarih = $request->tarih;
+        $cariharaket->metot = $request->odeme_metot;
+        $cariharaket->aciklama = $request->aciklama;
         $saved2 = $cariharaket->save();
         if ($saved and $saved2)
             return redirect(route('muhasebe.cariharaket.gecmis', $cariharaket->cari_id))->with('success', 'İşlem Başarılı');

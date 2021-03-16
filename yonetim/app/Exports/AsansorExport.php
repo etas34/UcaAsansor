@@ -27,7 +27,7 @@ class AsansorExport implements FromCollection,WithHeadings,ShouldAutoSize,WithEv
         {
 
             $asansor=AsansorModel::where('durum','=', 1)
-                ->select('kimlik','apartman','blok','yonetici','yonetici_tel','adres','etiket','aylik_bakim','etiket_tarihi')
+                ->select('kimlik','apartman','blok','yonetici','yonetici_tel','adres','etiket','aylik_bakim','etiket_tarihi','bakim_ucreti')
                 ->get();
         }
         elseif ($this->id==2)
@@ -35,7 +35,7 @@ class AsansorExport implements FromCollection,WithHeadings,ShouldAutoSize,WithEv
 
             $asansor=AsansorModel::where('durum','=', 1)
                 ->where('etiket','=','Sarı')
-                ->select('kimlik','apartman','blok','yonetici','yonetici_tel','adres','etiket','aylik_bakim','etiket_tarihi')
+                ->select('kimlik','apartman','blok','yonetici','yonetici_tel','adres','etiket','aylik_bakim','etiket_tarihi','bakim_ucreti')
                 ->get();
 
         }
@@ -43,7 +43,7 @@ class AsansorExport implements FromCollection,WithHeadings,ShouldAutoSize,WithEv
         {
             $asansor=AsansorModel::where('durum','=', 1)
                 ->where('etiket','=','Kırmızı')
-                ->select('kimlik','apartman','blok','yonetici','yonetici_tel','adres','etiket','aylik_bakim','etiket_tarihi')
+                ->select('kimlik','apartman','blok','yonetici','yonetici_tel','adres','etiket','aylik_bakim','etiket_tarihi','bakim_ucreti')
                 ->get();
 
         }
@@ -54,7 +54,7 @@ class AsansorExport implements FromCollection,WithHeadings,ShouldAutoSize,WithEv
     public function headings(): array
     {
         return [
-            'Asansör Kimlik No','Apartman','Blok','Yönetici','Yönetici Tel','Adres','Etiket','Son Aylik Bakım Tarihi','Sonraki Revizyon Tarihi'
+            'Asansör Kimlik No','Apartman','Blok','Yönetici','Yönetici Tel','Adres','Etiket','Son Aylik Bakım Tarihi','Sonraki Revizyon Tarihi','Bakım Ücreti'
         ];
     }
 
@@ -66,7 +66,7 @@ class AsansorExport implements FromCollection,WithHeadings,ShouldAutoSize,WithEv
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange = 'A1:I1'; // All headers
+                $cellRange = 'A1:J1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(12);
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setBold(4);
 

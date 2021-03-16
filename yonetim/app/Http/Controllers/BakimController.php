@@ -201,7 +201,8 @@ class BakimController extends Controller
             $text = "<b>Yeni Bakım Yapıldı</b>\n"
                 . "--------------------------------\n"
                 . "<b>Apartman :</b>" . $asansor->apartman . "\n"
-                . "<b>Blok :</b>" . $asansor->blok . "\n";
+                . "<b>Blok :</b>" . $asansor->blok . "\n"
+                . "<b>Bakım Yapan :</b>" . $user->name . "\n";
 
             if ($parcalar) {
                 $text .= "\n<b>🤖 Değişen Parçalar</b>\n";

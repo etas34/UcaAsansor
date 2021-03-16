@@ -12,7 +12,7 @@
                             <div class="card-header">
                                 <h3 class="card-title"> Cari Haraketler</h3>
                                 <div style="float: right !important;">
-                                    <a href="{{route('muhasebe.cariharaket.index')}}" class="btn btn-success">Tahsilat / Ödeme Yap</a>
+                                    <a href="{{route('muhasebe.cariharaket.create',$id)}}" class="btn btn-success">Tahsilat / Ödeme Yap</a>
                                 </div>
                             </div>
                             <!-- /.card-header -->
@@ -27,7 +27,6 @@
 
                                                     <th>No</th>
                                                     <th>Cari Ünvanı</th>
-                                                    <th>Cari Kodu</th>
                                                     <th>İlgili Kişi</th>
                                                     <th>Açıklama</th>
                                                     <th>Tutar</th>
@@ -44,14 +43,15 @@
 
                                                         <td></td>
                                                         <td>{{\App\Cari::find($value->cari_id)->cari_unvan}}</td>
-                                                        <td>{{$value->cari_id}}</td>
                                                         <td>{{\App\Cari::find($value->cari_id)->ilgili_kisi}}</td>
-                                                        <td>{{$value->aciklama }}</td>
+                                                        <td>{{$value->aciklama }}{{\App\Fatura::find($value->fatura_id)['aciklama']}}</td>
 
                                                         <td>{{$value->tutar }}</td>
                                                         <td>@if($value->tur == 1){{"Tahsilat"}} @elseif($value->tur == 2){{"Ödeme"}}   @elseif(explode(",",$value->tur)[0] == 3){{"Fatura Kesimi"}} @endif </td>
                                                         <td>{{$value->islem_tarih }}</td>
-                                                        <td>{{$value->metot }}</td>
+                                                        <td>@if($value->metot=='kredi_kart') Kredi Kartı @elseif($value->metot=='nakit') Nakit
+                                                            @elseif($value->metot=='eft') EFT
+                                                            @elseif($value->metot=='multi')Çoklu Ödeme (Kredi Kartı + Nakit)@endif</td>
 
                                                         <td><a href="{{route('muhasebe.cariharaket.edit',$value->id)}}"><span
                                                                     class="badge bg-orange p-2">Düzenle</span></a></td>
