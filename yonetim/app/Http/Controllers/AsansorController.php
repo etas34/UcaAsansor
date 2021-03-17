@@ -11,8 +11,11 @@ use App\Exports\ParcaExport;
 use App\ParcaModel;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 use Maatwebsite\Excel\Facades\Excel;
+use Storage;
 
 class AsansorController extends Controller
 {
@@ -81,7 +84,6 @@ class AsansorController extends Controller
      */
     public function store(Request $request)
     {
-
         $asansor=new AsansorModel();
         $asansor->kimlik=$request->kimlik;
         $asansor->apartman=$request->apartman;
@@ -105,6 +107,28 @@ class AsansorController extends Controller
         $ekbilgiler->pano_marka=$request->pano_marka;
         $ekbilgiler->kisilik=$request->kisilik;
         $ekbilgiler->hidrolik=$request->hidrolik;
+
+
+        $images = array();
+        if ($files = $request->file('images')) {
+
+            foreach ($files as $key => $file) {
+                $extension = $file->extension();
+                $name = time().$key. "." . $extension;
+
+
+                $img = Image::make($file)->resize(1000, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+
+
+                $img->save('public/images/asansorfoto/' . $name);
+                $images[] = "/public/images/asansorfoto/" . $name;
+            }
+        }
+
+
+        $ekbilgiler->images = implode(";", $images);
         $saved2=$ekbilgiler->save();
 
 
@@ -160,6 +184,8 @@ class AsansorController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+
         $asansor=AsansorModel::find($id);
         $asansor->kimlik=$request->kimlik;
         $asansor->apartman=$request->apartman;
@@ -185,16 +211,68 @@ class AsansorController extends Controller
         $ekbilgiler->pano_marka=$request->pano_marka;
         $ekbilgiler->kisilik=$request->kisilik;
         $ekbilgiler->hidrolik=$request->hidrolik;
+
+
+        if (isset($request->sil_ids))
+        {
+            $images = explode(";", $ekbilgiler->images);
+
+            foreach(explode(',',$request->sil_ids) as $key => $value )
+                {
+
+                    if (File::exists(base_path($images[$value]))) {
+
+                        unlink(base_path($images[$value]));
+                    }
+                    unset($images[$value]);
+
+                }
+
+
+            $ekbilgiler->images=implode(";", $images);
+
+        }
+
+
+        if ($files = $request->file('images')) {
+
+            $images2 = array();
+            foreach ($files as $key => $file) {
+                $extension = $file->extension();
+                $name = time().$key. "." . $extension;
+
+
+                $img = Image::make($file)->resize(1000, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+
+
+                $img->save('public/images/asansorfoto/' . $name);
+                $images2[] = "/public/images/asansorfoto/" . $name;
+            }
+
+            if ($ekbilgiler->images)
+            {
+                $ekbilgiler->images =$ekbilgiler->images.";". implode(";", $images2);
+            }
+            else
+            {
+                $ekbilgiler->images =implode(";", $images2);
+            }
+        }
+
+
+
         $saved2=$ekbilgiler->save();
 
 
         if($saved and $saved2){
-            return redirect(route('asansor.index',1))->with('success','Asansör Düzenlendi');
+            return back()->with('success','Asansör Düzenlendi');
         }
         else
         {
 
-            return redirect(route('asansor.index',1))->with('error','Asansör Düzenlenemedi');
+            return back()->with('error','Asansör Düzenlenemedi');
         }
     }
 

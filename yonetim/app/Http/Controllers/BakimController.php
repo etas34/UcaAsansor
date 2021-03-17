@@ -131,7 +131,7 @@ class BakimController extends Controller
 
 
                 $img->save('public/images/' . $name);
-                $images[] = url('/public/images') . "/" . $name;
+                $images[] = "/public/images/" . $name;
             }
         }
 

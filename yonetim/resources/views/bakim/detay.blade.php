@@ -87,7 +87,7 @@
 
                                         @foreach(explode(';', $bakim->images) as $image)
                                             <div class="form-group col-md-4">
-                                                <img height="400px" width="400px" src="{{$image}}"/>
+                                                <img height="400px" width="400px" src="{{asset($image)}}"/>
                                             </div>
                                         @endforeach
                                     </div>

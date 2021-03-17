@@ -10,7 +10,7 @@
                     <div class="col-md-12">
                         <div class="card card-primary">
 
-                            <form action="{{route('asansor.store')}}" method="post" autocomplete="off">
+                            <form action="{{route('asansor.store')}}" method="post" autocomplete="off" enctype="multipart/form-data">
                                 {{csrf_field()}}
                                 <div class="card-header">
                                     <h3 class="card-title">Yeni Asansör Ekle</h3>
@@ -168,7 +168,11 @@
 
                                                 </select>
                                             </div>
-
+                                            <div class="form-group">
+                                                <label class="control-label">Fotoğraf Yükle</label>
+                                                <input type="file" name="images[]" multiple class="form-control" id="image-input"
+                                                       accept="image/*">
+                                            </div>
 
                                         </div>
                                     </div>

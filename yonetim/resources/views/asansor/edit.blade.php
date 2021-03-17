@@ -10,7 +10,7 @@
                     <div class="col-md-12">
                         <div class="card card-primary">
 
-                            <form action="{{route('asansor.update',$asansor->id)}}" method="post" autocomplete="off">
+                            <form action="{{route('asansor.update',$asansor->id)}}" method="post" autocomplete="off"  enctype="multipart/form-data">
                                 {{csrf_field()}}
                                 <div class="card-header">
                                     <h3 class="card-title">Asansör Düzenle</h3>
@@ -169,7 +169,32 @@
 
                                                 </select>
                                             </div>
+                                            <div class="form-group">
+                                                <label class="control-label">Fotoğraf Yükle</label>
+                                                <input type="file" name="images[]" multiple class="form-control" id="image-input"
+                                                       accept="image/*">
+                                            </div>
 
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-between">
+                                        <div class="col-md-12">
+
+                                            @if($ekbilgiler->images!='')
+                                                <label class="control-label">Fotoğraflar</label>
+                                                <div class="row">
+
+                                                    @foreach(explode(';', $ekbilgiler->images) as $key=>$image)
+                                                        <div class="form-group col-md-4">
+                                                            <a target="_blank" href="{{asset($image)}}"><img height="400px" width="400px" src="{{asset($image)}}"/></a>
+
+                                                            <a href="javascript:void(0)" data-id="{{$key}}" class="btn btn-block btn-danger mt-1 sil_btn" >Sil</a>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+
+                                            @endif
+                                            <input type="hidden" name="sil_ids" id="sil_ids">
                                         </div>
                                     </div>
                                 </div>
@@ -178,6 +203,7 @@
                                 </div>
 
                             </form>
+
                         </div>
 
 
@@ -185,9 +211,31 @@
                     </div>
 
                 </div>
+
+
+
             </div>
         </section>
 
     </div>
 
 @endsection
+
+@push('scripts')
+    <script>
+        var sil_ids=[];
+    $('.sil_btn').click(function(){
+
+        sil_ids.push($(this).attr("data-id"));
+        $('#sil_ids').val(sil_ids);
+        $(this).closest('.form-group').remove();
+
+
+    });
+    </script>
+
+
+
+
+    @endpush
+
