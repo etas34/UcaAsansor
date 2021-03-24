@@ -83,7 +83,7 @@ class CariharaketController extends Controller
 
     public function tumgecmis()
     {
-        $cariharaket = Cariharaket::all();
+        $cariharaket = Cariharaket::orderBy('created_at','desc')->get();
 
         //  $ilgili_kisi = Cari::find($cariharaket->cari_id)->ilgili_kisi;
         //dd($ilgili_kisi);
@@ -148,6 +148,7 @@ class CariharaketController extends Controller
         $cariharaket->islem_tarih = $request->tarih;
         $cariharaket->metot = $request->odeme_metot;
         $cariharaket->aciklama = $request->aciklama;
+        $cariharaket->user_id = \Auth::user()->id;
 
         $saved = $cariharaket->save();
         if ($saved)

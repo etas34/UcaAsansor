@@ -124,6 +124,27 @@
 
 
 
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" id="myCheck2"
+                                               onclick="myFunction2()"  name="CbMesaj2">
+                                        <label for="myCheck2" class="custom-control-label">Tahsilat Ekle</label>
+                                    </div>
+                                    <div id="text2" style="display: none">
+
+                                        <div class="form-group col-md-12">
+                                            <label class="control-label">Tutar</label>
+                                            <input type="number" step="0.01" required name="tutar" value="{{$asansor->bakim_ucreti}}" class="form-control">
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label class="control-label">Açıklama</label>
+                                            <input name="aciklama" class="form-control" value="{{$asansor->apartman}} {{$asansor->blok}} {{ \Carbon\Carbon::now()->monthName}} Ayı Bakım Ücreti">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" value="{{$asansor->cari_id}}" id="cari_id">
+
+
+
                                     <div class="preview-area row"></div>
 
 
@@ -170,19 +191,7 @@
 
     <script>
 
-        var text = document.getElementById("text");
 
-        $('#checkboxDanger1').change(function(){
-            if($(this).is(':checked')) {
-                // Checkbox is checked..
-                $( "#myCheck" ).prop( "checked", false );
-                text.style.display = "none";
-            } else {
-                // Checkbox is not checked..
-                $( "#myCheck" ).prop( "checked", true );
-                text.style.display = "block";
-            }
-        });
 
         function myFunction() {
             var checkBox = document.getElementById("myCheck");
@@ -195,6 +204,30 @@
                 text.style.display = "none";
             }
         }
+
+        function myFunction2() {
+            var checkBox2 = document.getElementById("myCheck2");
+            var cari_id = document.getElementById("cari_id").value;
+            if(cari_id=='')
+            {
+                alert('Asansöre Ait Cari Kaydı Yok')
+                checkBox2.checked=false;
+                return false;
+            }
+            else {
+                var text2 = document.getElementById("text2");
+
+                if (checkBox2.checked == true ) {
+                    text2.style.display = "block";
+                } else {
+                    text2.style.display = "none";
+                }
+
+            }
+
+
+        }
+
         function enableDisable(bEnable, textBoxID)
         {
             document.getElementById(textBoxID).disabled = !bEnable

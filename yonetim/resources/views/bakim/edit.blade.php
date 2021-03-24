@@ -105,6 +105,31 @@
                                         </div>
 
 
+                                    <div class="custom-control custom-checkbox">
+                                        <input disabled class="custom-control-input" type="checkbox" id="myCheck2"
+                                                @if(isset($tahsilat)) checked @endif name="CbMesaj2">
+                                        <input name="CbMesaj2" type="hidden" value="@if(isset($tahsilat)) true @endif"/>
+                                        <label for="myCheck2" class="custom-control-label">Tahsilat</label>
+
+                                    </div>
+                                    <div id="text2" style="@if(!isset($tahsilat)) display: none @endif ">
+
+                                        <div class="form-group col-md-12">
+                                            <label class="control-label">Tutar</label>
+                                            <input type="number" step="0.01" required name="tutar" value="{{$tahsilat->tutar ?? '0'}}" class="form-control">
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label class="control-label">Açıklama</label>
+                                            <input name="aciklama" class="form-control" value="{{$tahsilat->aciklama ?? ''}}">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" value="{{App\AsansorModel::find($bakim['asansor_id'])->cari_id}}" id="cari_id">
+
+
+
+
+
                                 </div>
                                 <div class="card-footer pull-right">
                                     <input type="submit" class="btn btn-success px-5 float-right" value="Düzenle">
@@ -124,3 +149,36 @@
     </div>
 
 @endsection
+
+@push('scripts')
+
+    <script>
+
+
+
+        function myFunction2() {
+            var checkBox2 = document.getElementById("myCheck2");
+            var cari_id = document.getElementById("cari_id").value;
+            if(cari_id==='')
+            {
+                alert('Asansöre Ait Cari Kaydı Yok')
+                checkBox2.checked=false;
+                return false;
+            }
+            else {
+                var text2 = document.getElementById("text2");
+
+                if (checkBox2.checked == true ) {
+                    text2.style.display = "block";
+                } else {
+                    text2.style.display = "none";
+                }
+
+            }
+
+
+        }
+
+
+    </script>
+@endpush

@@ -388,6 +388,7 @@ class FaturaController extends Controller
         $cariharaket->metot = '';
         $cariharaket->islem_tarih = $request->tarih;
         $cariharaket->aciklama = $request->aciklama;
+        $cariharaket->user_id = \Auth::user()->id;
 
 
         $cariharaket->save();

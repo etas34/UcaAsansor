@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\ArizaModel;
 use App\AsansorModel;
 use App\BakimModel;
+use App\Cari;
+use App\Cariharaket;
 use App\Exports\BakimExport;
 use App\ParcaModel;
 use App\smsModel;
@@ -100,6 +102,14 @@ class BakimController extends Controller
         $validatedData = $request->validate([
             'images.*' => 'mimes:jpeg,jpg,png',
         ]);
+        if (isset($request->CbMesaj2)) {
+            $asansor=AsansorModel::find($id);
+            if ($asansor->cari_id=='')
+            {
+                return back()->with('error', 'Cari Kayıt Bulunamadı');
+
+            }
+        }
 
         DB::beginTransaction();
 
@@ -194,6 +204,34 @@ class BakimController extends Controller
             }
 
 
+            // Cari Hesaba Tahsilat Ekleme
+            if (isset($request->CbMesaj2)) {
+                $asansor=AsansorModel::find($id);
+
+
+                $cari = Cari::find($asansor->cari_id);
+
+                $cariharaket = new Cariharaket();
+
+                $cari->borc_bakiye -= $request->tutar;
+                if ($cari->borc_bakiye < 0) {
+                    $cari->alacak_bakiye += abs($cari->borc_bakiye);
+                    $cari->borc_bakiye = 0;
+                }
+                $cari->save();
+
+                $cariharaket->cari_id = $asansor->cari_id;
+                $cariharaket->bakim_id = $bakim->id;
+                $cariharaket->tutar = $request->tutar;
+                $cariharaket->tur = 1;
+                $cariharaket->islem_tarih = date('Y-m-d');
+                $cariharaket->metot = 'nakit';
+                $cariharaket->aciklama = $request->aciklama;
+                $cariharaket->user_id = \Auth::user()->id;
+
+                $saved = $cariharaket->save();
+            }
+
             // telegram
             $asansor = AsansorModel::find($bakim->asansor_id);
             $user = User::find($bakim->user_id);
@@ -261,8 +299,9 @@ class BakimController extends Controller
     {
 
         $bakim = BakimModel::find($id);
+        $tahsilat= Cariharaket::where('bakim_id',$bakim->id)->first();
         $user = User::where('durum', '=', 1)->get();
-        return view('bakim.edit', compact('bakim', 'user'));
+        return view('bakim.edit', compact('bakim', 'user','tahsilat'));
     }
 
     /**
@@ -275,6 +314,17 @@ class BakimController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+        $bakim = BakimModel::find($id);
+        if (isset($request->CbMesaj2)) {
+            $asansor=AsansorModel::find($bakim->asansor_id);
+            if ($asansor->cari_id=='')
+            {
+                return back()->with('error', 'Cari Kayıt Bulunamadı');
+
+            }
+        }
+
         DB::beginTransaction();
 
         try {
@@ -290,6 +340,48 @@ class BakimController extends Controller
             $bakim->fatura_no = $request->fnumara;
             $bakim->save();
             AsansorModel::find($bakim->asansor_id)->update(['aylik_bakim' => Carbon::now()->format('Y-m-d')]);
+
+
+
+
+            // Cari Hesaba Tahsilat Ekleme
+            if (isset($request->CbMesaj2)) {
+                $asansor=AsansorModel::find($bakim->asansor_id);
+                $cari = Cari::find($asansor->cari_id);
+                $cariharaket = Cariharaket::where('bakim_id',$bakim->id)->first();
+
+
+
+                if ($cari->alacak_bakiye > 0) {
+                    if ($cari->alacak_bakiye > $cariharaket->tutar)
+                        $cari->alacak_bakiye = $cari->alacak_bakiye - $cariharaket->tutar; // eski bakiye'ye dönüş yapıldı
+                    else {
+
+                        $cari->borc_bakiye = $cari->borc_bakiye + ($cariharaket->tutar - $cari->alacak_bakiye); // eski bakiye'ye dönüş yapıldı
+                        $cari->alacak_bakiye = 0;
+                    }
+
+                } else {
+
+                    $cari->borc_bakiye += $cariharaket->tutar; // eski bakiye'ye dönüş yapıldı
+                }
+
+                $cari->borc_bakiye -= $request->tutar;
+                if ($cari->borc_bakiye < 0) {
+                    $cari->alacak_bakiye += abs($cari->borc_bakiye);
+                    $cari->borc_bakiye = 0;
+                }
+
+                $cari->save();
+
+                $cariharaket->tutar = $request->tutar;
+                $cariharaket->aciklama = $request->aciklama;
+
+                $saved = $cariharaket->save();
+            }
+
+
+
 
             DB::commit();
 

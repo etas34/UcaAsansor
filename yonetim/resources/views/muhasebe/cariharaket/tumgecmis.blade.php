@@ -20,7 +20,7 @@
                                 <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
                                     <div class="row">
                                         <div class="col-sm-12 table-responsive">
-                                            <table id="example1" class="table table-bordered table-striped dataTable"
+                                            <table id="export_table" class="table table-bordered table-striped dataTable"
                                                    role="grid" aria-describedby="example1_info">
                                                 <thead>
                                                 <tr role="row">
@@ -33,6 +33,7 @@
                                                     <th>Tür</th>
                                                     <th>İşlem Tarihi</th>
                                                     <th>Ödeme Metotu</th>
+                                                    <th>İşlem Yapan</th>
                                                     <th style="width: 15px;">Düzenle</th>
                                                     <th style="width: 10px;">Kaldır</th>
                                                 </tr>
@@ -49,7 +50,7 @@
                                                         <td>@if($value->tur == 1){{"Tahsilat"}} @elseif($value->tur == 2){{"Ödeme"}}@elseif($value->tur == 3){{"Fatura Kesimi"}} @endif </td>
                                                         <td>{{$value->islem_tarih }}</td>
                                                         <td>{{$value->metot }}</td>
-
+                                                        <td>@if($value->user_id){{\App\User::findOrFail($value->user_id)->name }}@endif</td>
                                                         <td><a href="{{route('muhasebe.cariharaket.edit',$value->id)}}"><span
                                                                     class="badge bg-orange p-2">Düzenle</span></a></td>
                                                         <td>
@@ -88,3 +89,31 @@
     </div>
 
 @endsection
+
+@push('scripts')
+    <script>
+        $(function () {
+            var table=$("#export_table").DataTable({
+                "responsive": true, "lengthChange": true, "autoWidth": false,
+                "buttons": ['copy', 'excel'],
+                "columnDefs": [
+                    {
+                        "searchable": false,
+                        "orderable": false,
+                        "targets": 0
+                    },
+                ],
+
+            });
+
+            table.on('order.dt search.dt', function () {
+                table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+
+            table.buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+        })
+    </script>
+@endpush
