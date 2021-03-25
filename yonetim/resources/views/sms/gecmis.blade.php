@@ -35,7 +35,7 @@
                                                         <td>{{$value->created_at}}</td>
                                                         <td>{{$value->phone}}</td>
                                                         <td>{{$value->mesaj}}</td>
-                                                        <td>@if($value->pdf!=null) <a href="https://ciftcilerasansor.com.tr/yonetim/storage/app/{{$value->pdf}}" target="_blank"> <span class="badge bg-gradient-light p-2" ><img src="{{asset('public/images/pdf.png')}}">Ekli Dosya</span></a>@endif</td>
+                                                        <td>@if($value->pdf!=null) <a href="{{URL::to('/storage/app')}}/{{$value->pdf}}" target="_blank"> <span class="badge bg-gradient-light p-2" ><img src="{{asset('public/images/pdf.png')}}">Ekli Dosya</span></a>@endif</td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>
