@@ -242,6 +242,10 @@ class BakimController extends Controller
                 . "<b>Blok :</b>" . $asansor->blok . "\n"
                 . "<b>Bakım Yapan :</b>" . $user->name . "\n";
 
+            if (isset($request->CbMesaj2)) {
+                $text .= "<b>Tahsilat :</b>" . $request->tutar."₺\n";
+            }
+
             if ($parcalar) {
                 $text .= "\n<b>🤖 Değişen Parçalar</b>\n";
                 $text .= "--------------------------------\n";
