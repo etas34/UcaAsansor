@@ -422,21 +422,17 @@
                             <div class="card-header">
                                 <h3 class="card-title"><b>Fatura İşlemleri</b></h3>
 
-                                <div class="card-tools">
-                                    {{--                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">--}}
-                                    {{--                                        <i class="fas fa-minus"></i>--}}
-                                    {{--                                    </button>--}}
-                                    {{--                                    <button type="button" class="btn btn-tool" data-card-widget="remove">--}}
-                                    {{--                                        <i class="fas fa-times"></i>--}}
-                                    {{--                                    </button>--}}
-                                </div>
                             </div>
                             <!-- /.card-header -->
-                            <div class="card-body p-0 ">
-                                <ul class="products-list product-list-in-card pl-2 pr-2">
-                                    <li class="item row">
+                            <div class="card-body ">
 
-                                        <a class="col-md-6" href="{{route('muhasebe.fatura.index')}}">
+                                <div class="row">
+
+
+                                    <div class="col-md-6">
+
+
+                                        <a href="{{route('muhasebe.fatura.index')}}">
                                             <div class="info-box mb-3 bg-warning">
                                                 <span class="info-box-icon">  <i class="fas fa-file-invoice-dollar"></i></span>
 
@@ -459,8 +455,13 @@
 
                                             {{--                                                                            </div>--}}
                                         </a>
+                                    </div>
 
-                                        <a class="col-md-6" href="{{route('muhasebe.fatura.tumgecmis')}}">
+
+                                    <div class="col-md-6">
+
+
+                                        <a href="{{route('muhasebe.fatura.tumgecmis')}}">
                                             <div class="info-box mb-3 bg-warning">
                                                 <span class="info-box-icon">  <i class="fas fa-history"></i></span>
 
@@ -483,8 +484,13 @@
 
                                             {{--                                                                            </div>--}}
                                         </a>
+                                    </div>
 
-                                        <a class="col-md-6" href="{{route('muhasebe.fatura.faturabakim')}}">
+
+                                    <div class="col-md-6">
+
+
+                                        <a href="{{route('muhasebe.fatura.faturabakim')}}">
                                             <div class="info-box">
                                                 <span class="info-box-icon bg-warning"><i
                                                         class="fas fa-file-invoice"></i></span>
@@ -520,8 +526,10 @@
 
                                             {{--                                                                            </div>--}}
                                         </a>
+                                    </div>
+                                    <div class="col-md-6">
 
-                                        <a class="col-md-6" href="{{route('muhasebe.fatura.faturaParca')}}">
+                                        <a href="{{route('muhasebe.fatura.faturaParca')}}">
                                             <div class="info-box">
                                                 <span class="info-box-icon bg-warning"><i
                                                         class="fas fa-th-list"></i></span>
@@ -546,53 +554,39 @@
 
                                             {{--                                                                            </div>--}}
                                         </a>
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <a href="{{route('muhasebe.fatura.faturaRevizyon')}}">
+                                            <div class="info-box">
+                                                <span class="info-box-icon bg-warning"><i
+                                                        class="fas fa-th-list"></i></span>
+
+                                                <div class="info-box-content">
+                                                    <span style="color: black">Faturası Kesilmeyen Revizyonlar</span>
+                                                    <h3><span style="color: black"
+                                                              class="info-box-number">{{$revizyon}}</span></h3>
+                                                </div>
+                                                <!-- /.info-box-content -->
+                                            </div>
+
+                                            {{--                                                                            <div class="small-box bg-success">--}}
+                                            {{--                                                                                <div class="inner">--}}
+                                            {{--                                                                                    <h4></h4>--}}
+
+                                            {{--                                                                                    <p>r</p>--}}
+                                            {{--                                                                                </div>--}}
+                                            {{--                                                                                <div class="icon">--}}
+                                            {{--                                                                                    <i class="fas fa-coins"></i>--}}
+                                            {{--                                                                                </div>--}}
+
+                                            {{--                                                                            </div>--}}
+                                        </a>
+                                    </div>
 
 
-                                    {{--                                        <a class="small-box " href="{{route('muhasebe.fatura.index')}}">--}}
-                                    {{--                                            <div class="card bg-warning">--}}
-                                    {{--                                                <div class="card-header text-center">--}}
-                                    {{--                                                    <h4 class="card-title text-bold" style="float: none;">Fatura</h4>--}}
-                                    {{--                                                </div>--}}
-                                    {{--                                                <div class="card-body">--}}
-                                    {{--                                                    Fatura Kes--}}
-                                    {{--                                                </div>--}}
-                                    {{--                                                <!-- /.card-body -->--}}
-                                    {{--                                            </div>--}}
-                                    {{--                                        </a>--}}
-                                    {{--                                    </li>--}}
-                                    {{--                                    <!-- /.item -->--}}
-
-
-
-                                    {{--                                                                    <li class="item">--}}
-
-                                    {{--                                                                        <a href="{{route('muhasebe.fatura.tumgecmis')}}">--}}
-                                    {{--                                                                            <div class="small-box bg-warning">--}}
-                                    {{--                                                                                <div class="inner">--}}
-                                    {{--                                                                                    <h4>Faturalar</h4>--}}
-
-                                    {{--                                                                                    <p>Geçmiş Faturalar</p>--}}
-                                    {{--                                                                                </div>--}}
-                                    {{--                                                                                <div class="icon">--}}
-                                    {{--                                                                                    <i class="ion ion-document-text"></i>--}}
-                                    {{--                                                                                </div>--}}
-                                    {{--                                                                            </div>--}}
-                                    {{--                                                                        </a>--}}
-
-
-                                    {{--                                                                    </li>--}}
-                                    {{--                                    <!-- /.item -->--}}
-                                    {{--                                    <li class="item">-</li>--}}
-                                    {{--                                    <!-- /.item -->--}}
-                                    {{--                                    <li class="item">-</li>--}}
-                                    <!-- /.item -->
-                                </ul>
+                                </div>
                             </div>
-                            {{--                            <!-- /.card-body -->--}}
-                            {{--                            <div class="card-footer text-center">--}}
-                            {{--                                <a href="javascript:void(0)" class="uppercase">View All Products</a>--}}
-                            {{--                            </div>--}}
-                            {{--                            <!-- /.card-footer -->--}}
                         </div>
 
 

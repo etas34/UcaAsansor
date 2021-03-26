@@ -20,6 +20,7 @@ class CreateRevizyonModelsTable extends Migration
             $table->text('ekstra')->nullable();
             $table->integer('user_id')->nullable();
             $table->string('pdf')->nullable();
+            $table->string('fatura_no')->nullable();
             $table->date('tarih')->nullable();
             $table->tinyInteger('durum')->nullable()->default(1);
             $table->timestamps();

@@ -9,6 +9,7 @@ use App\Cariharaket;
 use App\Fatura;
 use App\Http\Controllers\Controller;
 use App\ParcaModel;
+use App\RevizyonModel;
 use Carbon\Carbon;
 use Dompdf\Exception;
 use Illuminate\Http\Request;
@@ -81,11 +82,20 @@ class CariController extends Controller
             ->select('parca_models.*', 'asansor_models.cari_id', 'asansor_models.apartman', 'asansor_models.blok')
             ->count();
 
-        $bakimlar = BakimModel::where('cari_id', '!=', '')->where('bakim_models.durum',1)
+        $bakimlar = BakimModel::where('cari_id', '!=', '')
+            ->where('bakim_models.durum',1)
             ->whereNull('fatura_no')
             ->join('asansor_models', 'bakim_models.asansor_id', '=', 'asansor_models.id')
             ->select('bakim_models.*', 'asansor_models.apartman', 'asansor_models.cari_id', 'asansor_models.blok', 'asansor_models.bakim_ucreti')
             ->count();
+
+        $revizyon = RevizyonModel::where('cari_id', '!=', '')
+            ->where('revizyon_models.durum',2)
+            ->whereNull('fatura_no')
+            ->join('asansor_models', 'revizyon_models.asansor_id', '=', 'asansor_models.id')
+            ->select('revizyon_models.*', 'asansor_models.apartman', 'asansor_models.cari_id', 'asansor_models.blok', 'asansor_models.bakim_ucreti')
+            ->count();
+
 
 
         $toplamBorcBakiye = Cari::where('durum','=',1)
@@ -102,7 +112,15 @@ class CariController extends Controller
     $cari = Cari::where('durum','=',1)
         ->get();
 
-        return view('muhasebe.index', compact('toplamBorcBakiye', 'toplamAlacakBakiye', 'parcalar', 'bakimlar','faturaTop','topTahsilat'));
+        return view('muhasebe.index', compact(
+            'toplamBorcBakiye',
+            'toplamAlacakBakiye',
+            'parcalar',
+            'bakimlar',
+            'faturaTop',
+            'revizyon',
+            'topTahsilat'
+        ));
     }
 
     /**

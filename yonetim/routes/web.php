@@ -278,6 +278,7 @@ Route::group(['prefix'=>'muhasebe','as'=>'muhasebe.','middleware'=>'defaults'],f
         Route::get('/gecmis/{id}', 'Muhasebe\FaturaController@gecmis')->name('gecmis');
         Route::get('/tumgecmis', 'Muhasebe\FaturaController@tumgecmis')->name('tumgecmis');
         Route::get('/faturabakim', 'Muhasebe\FaturaController@faturabakim')->name('faturabakim');
+        Route::get('/fatura-revizyon', 'Muhasebe\FaturaController@faturaRevizyon')->name('faturaRevizyon');
         Route::get('/faturaparca', 'Muhasebe\FaturaController@faturaparca')->name('faturaParca');
         Route::get('/create/{id}', 'Muhasebe\FaturaController@create')->name('create');
         Route::get('/edit/{id}', 'Muhasebe\FaturaController@edit')->name('edit');

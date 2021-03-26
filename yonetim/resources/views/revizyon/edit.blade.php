@@ -73,6 +73,16 @@
                                             </div>
                                             <!-- /.input group -->
                                         </div>
+                                        <div class="form-group col-md-12">
+                                            <label>Fatura Numarası</label>
+
+                                            <div class="input-group date">
+                                                <div class="input-group-addon">
+                                                </div>
+                                                <input type="text" class="form-control pull-right" name="fatura_no" value="{{$revizyon->fatura_no}}">
+                                            </div>
+                                            <!-- /.input group -->
+                                        </div>
 
                                         <!-- checkbox -->
                                         <div class="form-group col-md-12">
@@ -83,7 +93,7 @@
                                             </div>
 
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group col-md-12">
                                             <label>Revizyon Yapan</label>
                                             <select name="user_id" class="form-control" required>
                                                 @foreach($user as $key=>$value)

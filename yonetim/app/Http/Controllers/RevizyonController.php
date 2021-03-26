@@ -402,6 +402,7 @@ class RevizyonController extends Controller
             $revizyon = RevizyonModel::find($id);
             $revizyon->ekstra = $request->ekstra;
             $revizyon->tarih = $request->tarih;
+            $revizyon->fatura_no = $request->fatura_no;
             $revizyon->user_id = $request->user_id;
             if($request->tamamlanamadi=='1')
             {

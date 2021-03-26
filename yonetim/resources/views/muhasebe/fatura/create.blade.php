@@ -268,6 +268,87 @@
                                                 </div>
                                             </div>
                                         </div>
+
+
+
+
+                                        <div class="modal fade" id="modal3">
+                                            <div class="modal-dialog modal-xl">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Revizyon Ekle</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <!-- /.modal -->
+
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <div class="card-body p-0" style="max-height : 300px;overflow-y: auto;">
+                                                                        <table class="table table-condensed" >
+                                                                            <thead>
+                                                                            <tr>
+                                                                                <th style="width: 10px">Seç</th>
+                                                                                <th>Apartman Adı</th>
+                                                                                <th>Blok</th>
+                                                                                <th>Genel Toplam</th>
+                                                                                <th>Revizyon Tarih</th>
+                                                                                {{--                                                                                <th>Bakım id</th>--}}
+
+                                                                            </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                            @foreach($revizyon as $key=>$value)
+
+
+                                                                                    <tr>
+
+                                                                                        <td><input id="bakimid" type="checkbox"
+                                                                                                   value="{{$value->gentoplam.','.$value->apartman.' '.$value->blok.','.$value->id}}"
+                                                                                                   name="bakim"></td>
+                                                                                        <td>{{$value->apartman}}</td>
+                                                                                        <td>{{$value->blok}}</td>
+                                                                                        <td>{{$value->gentoplam}}</td>
+                                                                                        <td>{{$value->tarih}}</td>
+                                                                                        {{--                                                                                    <td></td>--}}
+                                                                                    </tr>
+                                                                            @endforeach
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+
+
+                                                                    {{--                                                                    <label>Multiple</label>--}}
+                                                                    {{--                                                                    <select name="bakim[]" class="form-control select2" multiple="multiple" data-placeholder="Select a State"--}}
+                                                                    {{--                                                                            style="width: 100%;">--}}
+
+                                                                    {{--                                                                    @foreach($asansor as $value)--}}
+                                                                    {{--                                                                                        <option value="{{$value->asansor_id}}">{{$value->apartman}} --> Oluşturma Tarihi: {{$value->created_at}}</option>--}}
+                                                                    {{--                                                                                    @endforeach--}}
+                                                                    {{--                                                                    </select>--}}
+                                                                </div>
+                                                            </div>
+
+
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="modal-footer">
+
+
+
+                                                        <button type="button" class="btn btn-success tx-13" id="buttontamam3"  data-dismiss="modal" value="durum">Tamam
+                                                        </button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         {{--                                        End Of Data Model '--}}
 
                                     </div>
@@ -283,6 +364,10 @@
                                         <button type="button" style=" border-color: #e7e7e7;" id="clearcb2" data-toggle="modal" data-target="#modal2"
                                                 class="btn btn-md pd-x-15 btn-success btn-uppercase mg-l-5"><i
                                                 data-feather="database" class="wd-10 mg-r-5"></i>Parça Faturası Ekle
+                                        </button>
+                                        <button type="button" style=" border-color: #e7e7e7;" id="clearcb3" data-toggle="modal" data-target="#modal3"
+                                                class="btn btn-md pd-x-15 btn-success btn-uppercase mg-l-5"><i
+                                                data-feather="database" class="wd-10 mg-r-5"></i>Revizyon Faturası Ekle
                                         </button>
 {{--                                    </div>--}}
 
@@ -482,6 +567,54 @@
 
                 // var birim = 1
                 $('#myTable').append('<tr><td style="padding: 0px !important;"><input type="text" name="parca_ids[]" value="'+parca[3] +'" hidden><input type="text" name="urun['+k+'][myid]" value="'+parca[3] +'" hidden><input type="text" name="urun['+k+'][tur]" value="'+2+'" hidden> <input type="text" value="'+  parca[0] +', '+parca[1]+' ' +parca[2] + ' PARÇA BEDELİ" name="urun[' + k + '][aciklama]" class="form-control"></td><td style="padding: 0px !important;"><input type="number" value="'+parca[1]+'" name="urun[' + k + '][miktar]" id="miktar' + k + '" min="0"  class="form-control hesapla sayisay"></td><td style="padding: 0px !important;"><input type="number" value="1" name="urun[' + k + '][fiyat]" id="fiyat' + k + '" min="0" step="0.0001"   class="form-control hesapla"></td><td style="padding: 0px !important;"><input type="number" name="urun[' + k + '][toplam]" id="toplam' + k + '" class="form-control toplamlar" readonly value=""></td><td style="padding: 0px !important; width: 5px"><input type="button" class="btn btn-danger" value="Sil"></td></tr>')
+                hesapla()
+            }
+
+            // alert( favorite.length/* favorite.join(", ")*/);
+
+
+
+        });
+        $("#buttontamam3").click(function(){
+
+            // var favorite = [];
+            //     $.each($("input[name='bakim']:checked"), function(){
+            //         favorite.push($(this).val());
+            //     });
+            //
+
+
+            values=[];
+            $.each($("input[name='bakim']:checked"),function(){
+                if($(this).is(":checked"))
+                    values.push($(this).val());
+            });
+
+
+
+
+
+            for (var i = 0 ; i< values.length ; i++){
+                var k = $(".sayisay").length;
+                var parca = values[i].split(',')
+                console.log(parca[0])
+                // if(typeof  parca[2] == "number")
+                //     var birim = parca[2]
+                // else
+                //     alert(typeof  parca[2])
+
+                // var birim = 1
+
+                $('#myTable').append('<tr>' +
+                    '<td style="padding: 0px !important;">' +
+                    '<input hidden type="text" name="revizyon_ids[]" value="'+parca[2]+'">' +
+                    '<input type="text" value="'+parca[1]+'REVİZYON İŞLEMİ " name="urun[' + k + '][aciklama]" class="form-control"></td>' +
+                    '<td style="padding: 0px !important;"><input type="number" value="1"  name="urun[' + k + '][miktar]" id="miktar' + k + '" min="0"  class="form-control hesapla sayisay"></td>' +
+                    '<td style="padding: 0px !important;"><input type="number" value="'+parca[0]+'" name="urun[' + k + '][fiyat]" id="fiyat' + k + '" min="0" step="0.0001"  class="form-control hesapla"></td>' +
+                    '<td style="padding: 0px !important;"><input type="number" name="urun[' + k + '][toplam]" id="toplam' + k + '" class="form-control toplamlar" readonly value=""></td>' +
+                    '<td style="padding: 0px !important; width: 5px"><input type="button" class="btn btn-danger" value="Sil"></td>' +
+                    '</tr>')
+
                 hesapla()
             }
 

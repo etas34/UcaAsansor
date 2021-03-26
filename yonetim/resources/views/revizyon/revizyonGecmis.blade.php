@@ -28,11 +28,11 @@
                                                     <th>Asansör Kimlik No</th>
                                                     <th>Apartman Adı</th>
                                                     <th>Blok</th>
-                                                    <th>Etiket</th>
                                                     <th>Revizyon Yapan</th>
                                                     <th>Revizyon Tarihi</th>
-                                                    <th>Sonraki Kontrol Tarihi</th>
+                                                    <th>Fatura Numarası</th>
                                                     <th>Revizyon Raporu</th>
+                                                    <th>Teklif Göster</th>
                                                     <th style="width: 15px;">İşlem</th>
                                                 </tr>
                                                 </thead>
@@ -43,11 +43,11 @@
                                                         <td>{{App\AsansorModel::find($value['asansor_id'])->kimlik}}</td>
                                                         <td>{{App\AsansorModel::find($value['asansor_id'])->apartman}}</td>
                                                         <td>{{App\AsansorModel::find($value['asansor_id'])->blok}}</td>
-                                                        <td><span class="badge p-2 @if(App\AsansorModel::find($value['asansor_id'])->etiket=="Yeşil") bg-success @elseif(App\AsansorModel::find($value['asansor_id'])->etiket=="Kırmızı") bg-danger @elseif(App\AsansorModel::find($value['asansor_id'])->etiket=="Sarı") bg-warning @elseif(App\AsansorModel::find($value['asansor_id'])->etiket=="Mavi") bg-primary @endif ">{{App\AsansorModel::find($value['asansor_id'])->etiket}}</span></td>
                                                         <td>{{App\User::find($value['user_id'])->name}}</td>
                                                         <td>{{$value->tarih}}</td>
-                                                        <td>{{App\AsansorModel::find($value['asansor_id'])->etiket_tarihi}}</td>
+                                                        <td>{{$value->fatura_no}}</td>
                                                         <td>@if($value->pdf!=null) <a href="{{route('revizyon.pdfGetir',$value->id)}}" target="_blank"> <span class="badge bg-gradient-light p-2" ><img src="{{asset('public/images/pdf.png')}}">Revizyon Raporu</span></a>@endif</td>
+                                                        <td><a href="{{route('revizyon.teklifGoster',$value->teklif_id)}}"><span class="badge bg-primary p-2">Teklif Göster</span></a></td>
                                                         <td><a href="{{route('revizyon.edit',$value->id)}}"><span class="badge bg-warning p-2">Düzenle / Göster</span></a></td>
                                                     </tr>
                                                 @endforeach

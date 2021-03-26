@@ -9,11 +9,10 @@ use App\Cariharaket;
 use App\Fatura;
 use App\Http\Controllers\Controller;
 use App\ParcaModel;
+use App\RevizyonModel;
 use Carbon\Carbon;
 use Doctrine\DBAL\Driver\OCI8\OCI8Exception;
 use Illuminate\Http\Request;
-
-
 
 
 class FaturaController extends Controller
@@ -32,7 +31,8 @@ class FaturaController extends Controller
     }
 
 
-    function sayiyiYaziyaCevir($sayi, $kurusbasamak, $parabirimi, $parakurus, $diyez, $bb1, $bb2, $bb3) {
+    function sayiyiYaziyaCevir($sayi, $kurusbasamak, $parabirimi, $parakurus, $diyez, $bb1, $bb2, $bb3)
+    {
         // kurusbasamak virgülden sonra gösterilecek basamak sayısı
         // parabirimi = TL gibi , parakurus = Kuruş gibi
         // diyez başa ve sona kapatma işareti atar # gibi
@@ -51,31 +51,31 @@ class FaturaController extends Controller
             $b3 = $bb3;
         }
 
-        $say1="";
+        $say1 = "";
         $say2 = ""; // say1 virgül öncesi, say2 kuruş bölümü
         $sonuc = "";
 
-        $sayi = str_replace(",", ".",$sayi); //virgül noktaya çevrilir
+        $sayi = str_replace(",", ".", $sayi); //virgül noktaya çevrilir
 
-        $nokta = strpos($sayi,"."); // nokta indeksi
+        $nokta = strpos($sayi, "."); // nokta indeksi
 
-        if ($nokta>0) { // nokta varsa (kuruş)
+        if ($nokta > 0) { // nokta varsa (kuruş)
 
-            $say1 = substr($sayi,0, $nokta); // virgül öncesi
-            $say2 = substr($sayi,$nokta, strlen($sayi)); // virgül sonrası, kuruş
+            $say1 = substr($sayi, 0, $nokta); // virgül öncesi
+            $say2 = substr($sayi, $nokta, strlen($sayi)); // virgül sonrası, kuruş
 
         } else {
             $say1 = $sayi; // kuruş yoksa
         }
 
-        $son ="";
+        $son = "";
         $w = 1; // işlenen basamak
         $sonaekle = 0; // binler on binler yüzbinler vs. için sona bin (milyon,trilyon...) eklenecek mi?
         $kac = strlen($say1); // kaç rakam var?
-        $sonint =""; // işlenen basamağın rakamsal değeri
+        $sonint = ""; // işlenen basamağın rakamsal değeri
         $uclubasamak = 0; // hangi basamakta (birler onlar yüzler gibi)
         $artan = 0; // binler milyonlar milyarlar gibi artışları yapar
-        $gecici ="";
+        $gecici = "";
 
         if ($kac > 0) { // virgül öncesinde rakam var mı?
 
@@ -109,7 +109,7 @@ class FaturaController extends Controller
                         if ($sonint > 0) {
                             $sonuc = $b1[$sonint] . $b3[2 + $artan] . $sonuc;
                             if ($artan == 0) { // birbin yazmasını engelle
-                                $sonuc = str_replace($b1[1] . $b3[2], $b3[2],$sonuc);
+                                $sonuc = str_replace($b1[1] . $b3[2], $b3[2], $sonuc);
                             }
                             $sonaekle = 1; // sona bin eklendi
                         } else {
@@ -154,25 +154,25 @@ class FaturaController extends Controller
             }
         } // if(kac>0)
 
-        if ($sonuc=="") { // virgül öncesi sayı yoksa para birimi yazma
+        if ($sonuc == "") { // virgül öncesi sayı yoksa para birimi yazma
             $parabirimi = "";
         }
 
-        $say2 = str_replace(".", "",$say2);
+        $say2 = str_replace(".", "", $say2);
         $kurus = "";
 
-        if ($say2!="") { // kuruş hanesi varsa
+        if ($say2 != "") { // kuruş hanesi varsa
 
             if ($kurusbasamak > 3) { // 3 basamakla sınırlı
                 $kurusbasamak = 3;
             }
             $kacc = strlen($say2);
             if ($kacc == 1) { // 2 en az
-                $say2 = $say2."0"; // kuruşta tek basamak varsa sona sıfır ekler.
+                $say2 = $say2 . "0"; // kuruşta tek basamak varsa sona sıfır ekler.
                 $kurusbasamak = 2;
             }
             if (strlen($say2) > $kurusbasamak) { // belirlenen basamak kadar rakam yazılır
-                $say2 = substr($say2,0, $kurusbasamak);
+                $say2 = substr($say2, 0, $kurusbasamak);
             }
 
             $kac = strlen($say2); // kaç rakam var?
@@ -205,7 +205,7 @@ class FaturaController extends Controller
                 }
                 $w++;
             }
-            if ($kurus=="") { // virgül öncesi sayı yoksa para birimi yazma
+            if ($kurus == "") { // virgül öncesi sayı yoksa para birimi yazma
                 $parakurus = "";
             } else {
                 $kurus = $kurus . " ";
@@ -248,7 +248,8 @@ class FaturaController extends Controller
      */
     public function faturabakim()
     {
-        $bakimlar = BakimModel::where('bakim_models.durum',1)->where('cari_id', '!=', '')
+        $bakimlar = BakimModel::where('bakim_models.durum', 1)->where('cari_id', '!=', '')
+            ->where('fatura_no', null)
             ->join('asansor_models', 'bakim_models.asansor_id', '=', 'asansor_models.id')
             ->select('bakim_models.*', 'asansor_models.apartman', 'asansor_models.cari_id', 'asansor_models.blok', 'asansor_models.bakim_ucreti')
             ->get();
@@ -262,9 +263,28 @@ class FaturaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function faturaRevizyon()
+    {
+
+        $revizyon = RevizyonModel::where('cari_id', '!=', '')
+            ->where('revizyon_models.durum', 2)
+            ->whereNull('fatura_no')
+            ->join('asansor_models', 'revizyon_models.asansor_id', '=', 'asansor_models.id')
+            ->select('revizyon_models.*', 'asansor_models.apartman', 'asansor_models.cari_id', 'asansor_models.blok', 'asansor_models.bakim_ucreti')
+            ->get();
+
+
+        return view('muhasebe.fatura.faturaRevizyon', compact('revizyon'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function faturaparca()
     {
-        $parcalar = ParcaModel::where('cari_id', '!=', '')->where('parca_models.durum',1)
+        $parcalar = ParcaModel::where('cari_id', '!=', '')->where('parca_models.durum', 1)
             ->join('asansor_models', 'parca_models.asansor_id', '=', 'asansor_models.id')
             ->select('parca_models.*', 'asansor_models.cari_id', 'asansor_models.apartman', 'asansor_models.blok')
             ->get();
@@ -282,35 +302,26 @@ class FaturaController extends Controller
 
         $cari = Cari::find($id);
 
-        $bakimlar = BakimModel::where('bakim_models.durum',1)->where('cari_id', '=', $id)
+        $bakimlar = BakimModel::where('bakim_models.durum', 1)->where('cari_id', '=', $id)
             ->join('asansor_models', 'bakim_models.asansor_id', '=', 'asansor_models.id')
             ->select('bakim_models.*', 'asansor_models.apartman', 'asansor_models.blok', 'asansor_models.bakim_ucreti')
             ->get();
 
 
-        $parcalar = ParcaModel::where('cari_id', '=', $id)->where('parca_models.durum',1)
+        $parcalar = ParcaModel::where('cari_id', '=', $id)->where('parca_models.durum', 1)
             ->join('asansor_models', 'parca_models.asansor_id', '=', 'asansor_models.id')
             ->select('parca_models.*', 'asansor_models.apartman', 'asansor_models.blok')
             ->get();
 
-////        dd($asansor->first());
-//        foreach ($asansor as $asansors)
-////            if (!$asansor->parca_fatura_no)
-//            var_dump($asansors->parca_id);
-//        dd('');
+        $revizyon = RevizyonModel::where('cari_id', '=', $id)
+            ->where('revizyon_models.durum', 2)
+            ->where('revizyon_models.fatura_no', null)
+            ->join('asansor_models', 'revizyon_models.asansor_id', '=', 'asansor_models.id')
+            ->join('teklif_models', 'revizyon_models.teklif_id', '=', 'teklif_models.id')
+            ->select('revizyon_models.*', 'asansor_models.apartman', 'asansor_models.blok','teklif_models.gentoplam')
+            ->get();
 
-//dd($asansor);
-
-//        $asansor = AsansorModel::where('cari_id','=',$id)
-//        ->get();
-
-
-//        foreach ($asansor as $asansors)
-//         $bakim  =  BakimModel::where('asansor_id','=',$asansors->id)->get();
-//        dd($bakim);
-
-
-        return view('muhasebe.fatura.create', compact('cari', 'bakimlar', 'parcalar'));
+        return view('muhasebe.fatura.create', compact('cari', 'bakimlar', 'parcalar', 'revizyon'));
     }
 
 
@@ -319,10 +330,10 @@ class FaturaController extends Controller
         $fatura = Fatura::find($id);
         $cari = Cari::find($fatura->cari_id);
 
-       $yazi = $this->sayiyiYaziyaCevir($fatura->gentoplam,2,"TL","kr.","",null,null,null);
+        $yazi = $this->sayiyiYaziyaCevir($fatura->gentoplam, 2, "TL", "kr.", "", null, null, null);
 
 
-        return view('muhasebe.fatura.faturaPrint', compact('fatura', 'cari','yazi'));
+        return view('muhasebe.fatura.faturaPrint', compact('fatura', 'cari', 'yazi'));
     }
 
     /**
@@ -342,13 +353,19 @@ class FaturaController extends Controller
                 $bakim->save();
             }
 
+
         if ($request->parca_ids)
             foreach ($request->parca_ids as $key => $value) {
                 $parca = ParcaModel::find($value);
                 $parca->fatura_no = $request->fnumarasi;
                 $parca->save();
             }
-
+        if ($request->revizyon_ids)
+            foreach ($request->revizyon_ids as $key => $value) {
+                $revizyon = RevizyonModel::find($value);
+                $revizyon->fatura_no = $request->fnumarasi;
+                $revizyon->save();
+            }
 
         $fatura = new Fatura();
         $fatura->cari_id = $request->cari_id;
