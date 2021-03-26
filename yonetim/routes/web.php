@@ -166,7 +166,9 @@ Route::group(['prefix'=>'revizyon','as'=>'revizyon.','middleware'=>'defaults'],f
     Route::get('/create/{id}', 'RevizyonController@create')->name('create')->middleware('yetki:4');
     Route::post('/create/{id}', 'RevizyonController@store')->name('store')->middleware('yetki:4');
     Route::get('/edit/{id}', 'RevizyonController@edit')->name('edit')->middleware('yetki:4');
+    Route::get('/soft-delete/{id}', 'RevizyonController@softDelete')->name('softDelete')->middleware('yetki:4');
     Route::get('/teklifGoster/{id}', 'RevizyonController@teklifGoster')->name('teklifGoster')->middleware('yetki:4');
+    Route::get('/teklifSil/{id}', 'RevizyonController@teklifSil')->name('teklifSil')->middleware('yetki:4');
     Route::get('/teklifEdit/{id}', 'RevizyonController@teklifEdit')->name('teklifEdit')->middleware('yetki:4');
     Route::get('/show/{id}', 'RevizyonController@show')->name('detay')->middleware('yetki:4');
     Route::post('/update/{id}', 'RevizyonController@update')->name('update')->middleware('yetki:4');

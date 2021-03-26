@@ -33,6 +33,7 @@
                                                     <th>Fatura Numarası</th>
                                                     <th>Revizyon Raporu</th>
                                                     <th>Teklif Göster</th>
+                                                    <th>Sil</th>
                                                     <th style="width: 15px;">İşlem</th>
                                                 </tr>
                                                 </thead>
@@ -48,7 +49,13 @@
                                                         <td>{{$value->fatura_no}}</td>
                                                         <td>@if($value->pdf!=null) <a href="{{route('revizyon.pdfGetir',$value->id)}}" target="_blank"> <span class="badge bg-gradient-light p-2" ><img src="{{asset('public/images/pdf.png')}}">Revizyon Raporu</span></a>@endif</td>
                                                         <td><a href="{{route('revizyon.teklifGoster',$value->teklif_id)}}"><span class="badge bg-primary p-2">Teklif Göster</span></a></td>
-                                                        <td><a href="{{route('revizyon.edit',$value->id)}}"><span class="badge bg-warning p-2">Düzenle / Göster</span></a></td>
+                                                        <td>
+                                                            <a onclick="return confirm('Kayıt Silinecek Emin Misiniz')" href="{{route('revizyon.softDelete',$value->id)}}"><span class="badge bg-danger p-2">Sil</span></a>
+
+                                                        </td>
+                                                        <td>
+                                                            <a href="{{route('revizyon.edit',$value->id)}}"><span class="badge bg-warning p-2">Düzenle / Göster</span></a>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>

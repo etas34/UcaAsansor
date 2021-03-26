@@ -28,7 +28,7 @@
                                                     <th>Teklif Tarihi</th>
                                                     <th>Revizyon Raporu</th>
                                                     <th>Sözleşme Durumu</th>
-                                                    <th style=" width: 50px">Detaylar</th>
+                                                    <th style=" width: 50px">İşlemeler</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -41,7 +41,11 @@
                                                         <td>{{$value->tarih}}</td>
                                                         <td>@if($value->pdf!=null) <a href="{{route('revizyon.pdfGetir',$value->id)}}" target="_blank"> <span class="badge bg-gradient-light p-2" ><img src="{{asset('public/images/pdf.png')}}">Revizyon Raporu</span></a>@endif</td>
                                                         <td><span class="badge p-2 @if($value->durum=="2") bg-success @elseif($value->durum=="3") bg-danger  @endif ">@if($value->durum=="2") Onaylandı @elseif($value->durum=="3") Reddedildi @endif</span></td>
-                                                        <td><a href="{{route('revizyon.teklifGoster',$value->id)}}"><span class="badge bg-primary p-2">Göster</span></a></td>
+                                                        <td>
+                                                            <a href="{{route('revizyon.teklifGoster',$value->id)}}"><span class="badge bg-primary p-2">Göster</span></a>
+                                                            <a onclick="return confirm('Kayıt Silinecek Emin Misiniz')" href="{{route('revizyon.teklifSil',$value->id)}}"><span class="badge bg-danger p-2">Sil</span></a>
+
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>
