@@ -20,7 +20,7 @@
                                 <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
                                     <div class="row">
                                         <div class="col-sm-12 table-responsive">
-                                            <table id="example1" class="table table-bordered table-striped dataTable"
+                                            <table id="export_table" class="table table-bordered table-striped dataTable"
                                                    role="grid" aria-describedby="example1_info">
                                                 <thead>
                                                 <tr role="row">
@@ -98,5 +98,33 @@
         </section>
 
     </div>
+
+    @push('scripts')
+        <script>
+            $(function () {
+                var table=$("#export_table").DataTable({
+                    "responsive": true, "lengthChange": true, "autoWidth": false,
+                    "buttons": ['copy', 'excel'],
+                    "columnDefs": [
+                        {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": 0
+                        },
+                    ],
+
+                });
+
+                table.on('order.dt search.dt', function () {
+                    table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                        cell.innerHTML = i + 1;
+                    });
+                }).draw();
+
+                table.buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+            })
+        </script>
+    @endpush
 
 @endsection

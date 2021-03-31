@@ -17,6 +17,7 @@ class CreateCariharaketsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('cari_id');
             $table->integer('fatura_id');
+            $table->integer('user_id');
             $table->decimal('tutar',8,2);
             $table->tinyInteger('tur');
             $table->date('islem_tarih');

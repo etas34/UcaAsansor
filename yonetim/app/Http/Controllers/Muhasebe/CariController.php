@@ -10,6 +10,7 @@ use App\Fatura;
 use App\Http\Controllers\Controller;
 use App\ParcaModel;
 use App\RevizyonModel;
+use App\User;
 use Carbon\Carbon;
 use Dompdf\Exception;
 use Illuminate\Http\Request;
@@ -25,6 +26,19 @@ class CariController extends Controller
     {
         $cari = Cari::where('durum', '=', '1')->get();
         return view('muhasebe.cari.index', compact('cari'));
+    }
+ /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function cariPersonel()
+    {
+        $user = User::where('durum',1)
+            ->get();
+        $baslangic_tarih =  new \Carbon\Carbon('first day of this month');
+        $bitis_tarih = new \Carbon\Carbon('now');
+        return view('muhasebe.cari.personel_cari', compact('user','baslangic_tarih','bitis_tarih'));
     }
 
 

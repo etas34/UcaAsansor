@@ -255,6 +255,7 @@ Route::group(['prefix'=>'muhasebe','as'=>'muhasebe.','middleware'=>'defaults'],f
 
     Route::group(['prefix'=>'cari','as'=>'cari.','middleware'=>'yetki:8'],function (){
         Route::get('/', 'Muhasebe\CariController@index')->name('index');
+        Route::get('/cari_personel', 'Muhasebe\CariController@cariPersonel')->name('cariPersonel');
         Route::get('/cariasansor', 'Muhasebe\CariController@cariasansor')->name('cariasansor');
         Route::get('/create/', 'Muhasebe\CariController@create')->name('create');
         Route::get('/edit/{id}', 'Muhasebe\CariController@edit')->name('edit');
