@@ -17,8 +17,8 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="formGroupExampleInput" class="d-block">Bölge Filtre</label>
-                                        <select class="form-control " id="asansor_select"  required>
-                                            <option value="1"  selected>Tüm Bölgeler</option>
+                                        <select class="form-control " id="asansor_select" required>
+                                            <option value="1" selected>Tüm Bölgeler</option>
                                             @foreach(\App\BolgeModel::all() as $bolge)
                                                 <option value="{{$bolge->ad}}">{{$bolge->ad}}</option>
                                             @endforeach
@@ -28,7 +28,8 @@
                                 <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
                                     <div class="row">
                                         <div class="col-sm-12 table-responsive">
-                                            <table id="export_table" class="table table-bordered table-striped dataTable"
+                                            <table id="export_table"
+                                                   class="table table-bordered table-striped dataTable"
                                                    role="grid" aria-describedby="example1_info">
                                                 <thead>
                                                 <tr role="row">
@@ -40,6 +41,7 @@
                                                     <th>Bölge</th>
                                                     <th>Bakım Tarihi</th>
                                                     <th>Fatura</th>
+                                                    <th>Yönetici Bilgileri</th>
                                                     <th style="width: 15px;">Düzenle</th>
                                                     <th style="width: 15px;">Detaylar</th>
                                                     <th style="width: 15px;">Sil</th>
@@ -56,14 +58,27 @@
                                                         <td>{{\App\BolgeModel::find(App\AsansorModel::find($value['asansor_id'])->bolge_id)['ad'] ?? $value->bolge_id}}</td>
                                                         <td>{{$value->updated_at}}</td>
                                                         <td>{{$value->fatura_no}}</td>
-                                                        <td><a href="{{route('bakim.edit',$value->id)}}"><span class="badge bg-warning p-2">Düzenle</span></a></td>
-                                                        <td><a href="{{route('bakim.detay',$value->id)}}"><span class="badge bg-primary p-2">Detaylar</span></a></td>
-                                                        <td><form  method="post" onSubmit="return confirm('Emin misiniz?')"
-                                                                   action="{{route('bakim.delete',$value->id)}}">
+<td>
+ {{(App\AsansorModel::find($value['asansor_id']))["yonetici"] ?? ''}}
+
+ {{App\AsansorModel::find($value['asansor_id'])["yonetici_tel"] ?? ''}}
+
+ {{App\AsansorModel::find($value['asansor_id'])["adres"] ?? ''}}
+</td>
+                                                        <td><a href="{{route('bakim.edit',$value->id)}}"><span
+                                                                    class="badge bg-warning p-2">Düzenle</span></a></td>
+                                                        <td><a href="{{route('bakim.detay',$value->id)}}"><span
+                                                                    class="badge bg-primary p-2">Detaylar</span></a>
+                                                        </td>
+                                                        <td>
+                                                            <form method="post"
+                                                                  onSubmit="return confirm('Emin misiniz?')"
+                                                                  action="{{route('bakim.delete',$value->id)}}">
                                                                 {{csrf_field()}}
                                                                 {{method_field('delete')}}
                                                                 <button class="badge bg-danger p-2">Sil</button>
-                                                            </form></td>
+                                                            </form>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>
@@ -77,7 +92,6 @@
                         </div>
 
 
-
                     </div>
 
                 </div>
@@ -89,29 +103,58 @@
     @push('scripts')
         <script>
             $(function () {
+                var buttonCommon = {
+                    exportOptions: {
+                        format: {
+                            body: function (data, row, column, node) {
+                                // Strip $ from salary column to make it numeric
+                                // console.log(data)
+                                return column === 8 ?
+                                    data.replace(/newline/g,"& amp") :
+                                    data;
+                            }
+                        }
+                    }
+                };
 
 
-                var table=$("#export_table").DataTable({
+                var table = $("#export_table").DataTable({
                     "responsive": true, "lengthChange": true, "autoWidth": false,
-                    "buttons": ['copy', 'excel'],
+                    "buttons": [
+                        'copy',
+                        $.extend(true, {}, buttonCommon, {
+                            extend: 'excel',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                            },
+                        }),
+                    ],
+
+
                     "columnDefs": [
                         {
                             "searchable": false,
                             "orderable": false,
                             "targets": 0
                         },
+                        {
+                            "visible" : false,
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": 8
+                        },
                     ],
 
                 });
 
+
                 table.on('order.dt search.dt', function () {
-                    table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    table.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
                         cell.innerHTML = i + 1;
                     });
                 }).draw();
 
                 table.buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
 
 
                 if ($('#asansor_select').length) {
