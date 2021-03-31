@@ -344,7 +344,6 @@
                 }
             );
 
-
             // Event listener to the two range filtering inputs to redraw on input
             $('#asansor_select').on('change', function () {
                 table.draw();
