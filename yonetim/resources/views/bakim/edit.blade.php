@@ -123,6 +123,15 @@
                                             <label class="control-label">Açıklama</label>
                                             <input name="aciklama" class="form-control" value="{{$tahsilat->aciklama ?? ''}}">
                                         </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="islemYapan">İşlem Yapan Kişi</label>
+                                            <select name="user_id" id="islemYapan" class="form-control">
+                                                <option value="" selected disabled></option>
+                                            @foreach(($user = \App\User::where('durum',1)->get()) as $key => $value)
+                                                    <option value="{{$value->id}}">{{$value->name}} </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                     <input type="hidden" value="{{App\AsansorModel::find($bakim['asansor_id'])->cari_id}}" id="cari_id">
 

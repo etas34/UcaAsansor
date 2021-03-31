@@ -227,7 +227,7 @@ class BakimController extends Controller
                 $cariharaket->islem_tarih = date('Y-m-d');
                 $cariharaket->metot = 'nakit';
                 $cariharaket->aciklama = $request->aciklama;
-                $cariharaket->user_id = \Auth::user()->id;
+                $cariharaket->user_id = $request->user_id;
 
                 $saved = $cariharaket->save();
             }
@@ -380,6 +380,7 @@ class BakimController extends Controller
 
                 $cariharaket->tutar = $request->tutar;
                 $cariharaket->aciklama = $request->aciklama;
+                $cariharaket->user_id = $request->user_id;
 
                 $saved = $cariharaket->save();
             }
