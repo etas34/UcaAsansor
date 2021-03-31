@@ -71,6 +71,14 @@
                                                     <input type="text" value="{{\Carbon\Carbon::now()->format('Y-m-d') }}" class="form-control pull-right datepicker" name="tarih" >
                                                 </div>
                                             </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="islemYapan">İşlem Yapan Kişi</label>
+                                                <select name="user_id" id="islemYapan" class="form-control">
+                                                    @foreach(($user = \App\User::where('durum',1)->get()) as $key => $value)
+                                                    <option value="{{$value->id}}">{{$value->name}} </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
 
                                         <div class="form-group col-md-12">
                                             <label class="control-label">Açıklama</label>

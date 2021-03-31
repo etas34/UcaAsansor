@@ -72,6 +72,16 @@
                                         </div>
 
                                         <div class="form-group col-md-12">
+                                            <label for="islemYapan">İşlem Yapan Kişi</label>
+                                            <select name="user_id" id="islemYapan" class="form-control">
+                                                @foreach(($user = \App\User::where('durum',1)->get()) as $key => $value)
+                                                    <option {{$cariharaket->user_id == $value->id ? 'selected' : ''}} value="{{$value->id}}">{{$value->name}} </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+
+                                        <div class="form-group col-md-12">
                                             <label class="control-label">Açıklama</label>
                                             <input name="aciklama" value="{{$cariharaket->aciklama}}" class="form-control">
                                         </div>

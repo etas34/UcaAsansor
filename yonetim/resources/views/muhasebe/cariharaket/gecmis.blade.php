@@ -44,8 +44,8 @@
 
                                                         <td></td>
                                                         <td>{{\App\Cari::find($value->cari_id)->cari_unvan}}</td>
-                                                        <td>{{\App\Cari::find($value->cari_id)->ilgili_kisi}}</td>
-                                                        <td>{{$value->aciklama }}{{\App\Fatura::find($value->fatura_id)['aciklama']}}</td>
+                                                        <td>{{\App\Cari::find($value->cari_id)->ilgili_kisi ?? ''}}</td>
+                                                        <td>{{$value->aciklama }}{{\App\Fatura::find($value->fatura_id)['aciklama'] ?? ''}}</td>
 
                                                         <td>{{$value->tutar }}</td>
                                                         <td>@if($value->tur == 1){{"Tahsilat"}} @elseif($value->tur == 2){{"Ödeme"}}   @elseif(explode(",",$value->tur)[0] == 3){{"Fatura Kesimi"}} @endif </td>
