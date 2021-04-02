@@ -33,10 +33,13 @@ class BakimController extends Controller
         if ($id == 0) {
 
             $asansor = AsansorModel::where('durum', '=', 1)
-                ->where(function ($query) {
-                    $query->orwhereDate('aylik_bakim', '<=', Carbon::now()->addMonthNoOverflow(-1)->addWeeks(1));
-//                    $query->orwhere('aylik_bakim', null);
-                })->get();
+                ->whereNotNull('aylik_bakim')
+//                ->orderBy('aylik_bakim','ASC')
+//                ->where(function ($query) {
+//                    $query->orwhereDate('aylik_bakim', '<=', Carbon::now()->addMonthNoOverflow(-1)->addWeeks(1));
+////                    $query->orwhere('aylik_bakim', null);
+//                })
+                ->get();
 
         } elseif ($id == 1) {
 
